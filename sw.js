@@ -1,5 +1,5 @@
 // Couleur PWA Service Worker
-const CACHE_NAME = 'couleur-v2';
+const CACHE_NAME = 'couleur-v3';
 const URLS_TO_CACHE = [
   './',
   './index.html',
@@ -37,19 +37,19 @@ self.addEventListener('fetch', event => {
     return;
   }
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200 || response.type === 'opaque') {
-          return response;
-        }
+    fetch(event.request).then(response => {
+      // オンライン時：常に最新を取得し、キャッシュも更新する（次回オフライン時用）
+      if (response && response.status === 200 && response.type !== 'opaque') {
         const toCache = response.clone();
         caches.open(CACHE_NAME)
           .then(cache => cache.put(event.request, toCache))
           .catch(e => console.log('Cache put skip:', event.request.url, e.message));
-        return response;
-      }).catch(() => {
-        // オフライン時はキャッシュを返す
+      }
+      return response;
+    }).catch(() => {
+      // オフライン時：キャッシュがあれば返す
+      return caches.match(event.request).then(cached => {
+        if (cached) return cached;
         if (event.request.destination === 'document') {
           return caches.match('./index.html');
         }

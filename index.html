@@ -369,7 +369,7 @@ const COLOR_CATEGORIES = [{
   id: "pink",
   label: "ピンク・レッド・バイオレット系",
   emoji: "💜",
-  color: "#c060a0",
+  color: "#953d78",
   grad: "linear-gradient(135deg,#c060a0,#8030c0)",
   desc: "ピンク・ローズ・レッド・バイオレット系",
   type: "shade",
@@ -449,52 +449,18 @@ const DEFAULT_BRANDS = [{
   sublabel: "ファッションカラー／ルベル",
   accent: "#8a6520",
   type: "color",
-  lines: [
-  // ベースカラー 30色 — 質感・ニュアンス表現ライン
-  // ブラウン(B) ベージュ(Be) グレージュ(Gr) パール(Pe) ウォームブラウン(WB) モノトーン(MT) アイボリー(IV)
-  {
-    name: "ベースカラー",
-    shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "Pe9", "Pe11", "WB5", "WB7", "WB9", "WB11", "MT5", "MT7", "MT9", "MT11", "IV5", "IV7", "IV9", "IV11"]
-  },
-  // シェードカラー 40色 — ファッション・トレンド色ライン
-  // アッシュ(A) マット(M) バイオレット(V) ピンク(P) レッド(R) オレンジ(O)
-  // ネイビー(NV) ホワイトバイオレット(WV) ホワイトアッシュ(WA) フューシャ(FP)
-  {
-    name: "シェードカラー",
-    shades: ["A5", "A7", "A9", "A11", "M5", "M7", "M9", "M11", "V5", "V7", "V9", "V11", "P7", "P9", "P11", "R5", "R7", "R9", "O7", "O9", "O11", "NV5", "NV7", "NV9", "WV9", "WV11", "WA9", "WA11", "FP7", "FP9", "FP11"]
-  },
-  // プライマリーカラー 7色 — 彩度強調・補正用純色ライン
-  // レッド(R) オレンジ(O) マット(M) アッシュ(A) バイオレット(V) ピンク(P) フューシャ(FP)
-  {
-    name: "プライマリーカラー",
-    shades: ["PR-R", "PR-O", "PR-M", "PR-A", "PR-V", "PR-P", "PR-FP"]
-  },
-  // ディープクリアカラー 4色 — シングルプロセスで深み・透明感を両立
-  {
-    name: "ディープクリアカラー",
-    shades: ["DC-Magenta", "DC-Cobalt", "DC-PearlGray", "DC-SandBeige"]
-  },
-  // ライトナー・クリア — 明度UP・希釈調整
-  {
-    name: "ライトナー・クリア",
-    shades: ["LT", "LT-EX", "CLR-PX"]
-  }]
+  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "Pe9", "Pe11", "WB5", "WB7", "WB9", "WB11", "MT5", "MT7", "MT9", "MT11", "IV5", "IV7", "IV9", "IV11", "A5", "A7", "A9", "A11", "M5", "M7", "M9", "M11", "V5", "V7", "V9", "V11", "P7", "P9", "P11", "R5", "R7", "R9", "O7", "O9", "O11", "NV5", "NV7", "NV9", "WV9", "WV11", "WA9", "WA11", "FP7", "FP9", "FP11", "PR-R", "PR-O", "PR-M", "PR-A", "PR-V", "PR-P", "PR-FP", "DC-Magenta", "DC-Cobalt", "DC-PearlGray", "DC-SandBeige", "LT", "LT-EX", "CLR-PX"],
+  shadeNames: {},
+  shadeColors: {}
 }, {
   id: "edol yoyo",
   label: "edol yoyo",
   sublabel: "塩基性カラー ／ ブリーチ毛専用",
-  accent: "#d45c8a",
+  accent: "#a8386a",
   type: "color",
-  lines: [{
-    name: "プライマリーライン",
-    shades: ["YY-Ash", "YY-Violet", "YY-Blue", "YY-Pink", "YY-Magenta", "YY-Red", "YY-Orange"]
-  }, {
-    name: "イマジンライン",
-    shades: ["YY-WhiteViolet", "YY-SilverGrey", "YY-BlueViolet", "YY-RosePink", "YY-CoralPink"]
-  }, {
-    name: "クリア",
-    shades: ["YY-Clear"]
-  }]
+  shades: ["YY-Ash", "YY-Violet", "YY-Blue", "YY-Pink", "YY-Magenta", "YY-Red", "YY-Orange", "YY-WhiteViolet", "YY-SilverGrey", "YY-BlueViolet", "YY-RosePink", "YY-CoralPink", "YY-Clear"],
+  shadeNames: {},
+  shadeColors: {}
 }];
 const SHADE_HUE = {
   // ベースカラー
@@ -548,7 +514,53 @@ const SHADE_HUE = {
   "YY-CoralPink": 350,
   "YY-Clear": 0
 };
+let SHADE_COLOR_OVERRIDES = {};
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(h / 60 % 2 - 1));
+  const m = l - c / 2;
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (h < 60) {
+    r = c;
+    g = x;
+    b = 0;
+  } else if (h < 120) {
+    r = x;
+    g = c;
+    b = 0;
+  } else if (h < 180) {
+    r = 0;
+    g = c;
+    b = x;
+  } else if (h < 240) {
+    r = 0;
+    g = x;
+    b = c;
+  } else if (h < 300) {
+    r = x;
+    g = 0;
+    b = c;
+  } else {
+    r = c;
+    g = 0;
+    b = x;
+  }
+  const toHex = v => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+function shadeColorHex(shade, brand) {
+  const c = swatchColor(shade, brand);
+  if (c.startsWith("#")) return c;
+  const m = c.match(/hsl\((\d+),(\d+)%,(\d+)%\)/);
+  if (m) return hslToHex(+m[1], +m[2], +m[3]);
+  return "#888888";
+}
 function swatchColor(shade, brand) {
+  if (SHADE_COLOR_OVERRIDES[shade]) return SHADE_COLOR_OVERRIDES[shade];
   if (shade === "YY-Clear") return "rgba(255,255,255,0.15)";
   for (const [k, h] of Object.entries(SHADE_HUE)) {
     if (shade === k || shade.startsWith(k + "-") || shade.match(/^[A-Z]+\d/) && shade.replace(/\d+$/, "") === k) {
@@ -2635,15 +2647,16 @@ const Tag = ({
 // colors: [{shade, brand, ratio, ...}]
 function GramCalculator({
   colors,
+  developerBySection,
   onClose
 }) {
-  const [total, setTotal] = useState(60);
-  const ratioSum = colors.reduce((s, c) => s + (+c.ratio || 1), 0);
-  const {
-    ratioStr,
-    pcts
-  } = calcRatio(colors.map(c => +c.ratio || 1));
-  const PRESETS = [30, 40, 50, 60, 80, 100, 120, 150, 200];
+  const groups = groupColorsBySection(colors);
+  const [totals, setTotals] = useState({});
+  const getTotal = key => totals[key] ?? 60;
+  const setGroupTotal = (key, val) => setTotals(t => ({
+    ...t,
+    [key]: val
+  }));
   return /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
@@ -2659,6 +2672,8 @@ function GramCalculator({
     style: {
       width: "100%",
       maxWidth: 600,
+      maxHeight: "88vh",
+      overflowY: "auto",
       background: "#f0ebe0",
       borderRadius: "18px 18px 0 0",
       padding: "22px 20px 44px",
@@ -2684,13 +2699,7 @@ function GramCalculator({
       color: "#5a4228",
       marginTop: 2
     }
-  }, "\u6BD4\u7387 ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: "'Noto Sans JP',sans-serif",
-      color: "#8a6520",
-      fontSize: 14
-    }
-  }, ratioStr), " \u3092\u7DAD\u6301\u3057\u3066\u5FC5\u8981\u91CF\u3092\u8A08\u7B97")), /*#__PURE__*/React.createElement("button", {
+  }, "\u5206\u985E\uFF08\u90E8\u4F4D\uFF09\u3054\u3068\u306B\u6BD4\u7387\u3092\u7DAD\u6301\u3057\u3066\u5FC5\u8981\u91CF\u3092\u8A08\u7B97")), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     style: {
       background: "none",
@@ -2699,176 +2708,192 @@ function GramCalculator({
       fontSize: 20,
       cursor: "pointer"
     }
-  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 16
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      marginBottom: 6
-    }
-  }, "\u5FC5\u8981\u306A\u5408\u8A08\u91CF"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-      marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "range",
-    min: 10,
-    max: 300,
-    step: 5,
-    value: total,
-    onChange: e => setTotal(+e.target.value),
-    style: {
-      flex: 1,
-      accentColor: "#8a6520"
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      alignItems: "baseline",
-      gap: 2,
-      flexShrink: 0
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "number",
-    min: 1,
-    max: 999,
-    value: total,
-    onChange: e => setTotal(+e.target.value),
-    style: {
-      width: 60,
-      padding: "4px 8px",
-      textAlign: "right",
-      fontSize: 20,
-      fontFamily: "'Noto Sans JP',sans-serif",
-      color: "#8a6520",
-      background: "rgba(138,101,32,0.06)",
-      border: "1px solid rgba(138,101,32,0.4)",
-      borderRadius: 7,
-      outline: "none"
-    }
-  }), /*#__PURE__*/React.createElement("span", {
+  }, "\u2715")), groups.length === 0 ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
-      color: "#5a4228"
+      color: "#8a7058",
+      textAlign: "center",
+      padding: "20px 0"
     }
-  }, "g"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 5,
-      flexWrap: "wrap"
-    }
-  }, PRESETS.map(v => /*#__PURE__*/React.createElement("button", {
-    key: v,
-    onClick: () => setTotal(v),
-    style: {
-      padding: "4px 10px",
-      borderRadius: 14,
-      cursor: "pointer",
-      fontSize: 11,
-      border: "none",
-      fontFamily: "'Noto Sans JP',sans-serif",
-      background: total === v ? "rgba(201,168,76,0.22)" : "rgba(255,255,255,0.05)",
-      color: total === v ? "#8a6520" : "rgba(232,221,208,0.7)"
-    }
-  }, v, "g")))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "#f0ebe0",
-      borderRadius: 12,
-      border: "1px solid #d0c4a8",
-      overflow: "hidden"
-    }
-  }, colors.map((c, i) => {
-    const g = ratioSum > 0 ? Math.round((+c.ratio || 1) / ratioSum * total * 10) / 10 : 0;
-    const pct = pcts[i] || 0;
+  }, "\u30AB\u30E9\u30FC\u5264\u304C\u307E\u3060\u8FFD\u52A0\u3055\u308C\u3066\u3044\u307E\u305B\u3093") : groups.map((group, gi) => {
+    const total = getTotal(group.key);
+    const setting = (developerBySection || {})[group.key] || {
+      developer: "6%",
+      multiplier: 1
+    };
+    const hasDev = setting.developer && setting.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09";
+    const ratioSum = group.items.reduce((s, c) => s + (+c.ratio || 1), 0);
+    const grams = group.items.map(c => ratioSum > 0 ? Math.round((+c.ratio || 1) / ratioSum * total) : 0);
+    const colorTotal = grams.reduce((s, g) => s + g, 0);
+    const devGrams = hasDev ? Math.round(colorTotal * (setting.multiplier || 1)) : 0;
+    const actualTotal = colorTotal + devGrams;
     return /*#__PURE__*/React.createElement("div", {
-      key: i,
+      key: group.key || "none",
+      style: {
+        marginBottom: gi < groups.length - 1 ? 20 : 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 500,
+        color: "#7a5818",
+        fontFamily: "'Noto Sans JP',sans-serif"
+      }
+    }, group.label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "baseline",
+        gap: 2
+      }
+    }, /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      min: 1,
+      max: 999,
+      value: total,
+      onChange: e => setGroupTotal(group.key, +e.target.value),
+      style: {
+        width: 64,
+        padding: "3px 6px",
+        textAlign: "right",
+        fontSize: 15,
+        fontFamily: "'Noto Sans JP',sans-serif",
+        color: "#8a6520",
+        background: "rgba(138,101,32,0.06)",
+        border: "1px solid rgba(138,101,32,0.4)",
+        borderRadius: 6,
+        outline: "none"
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: "#5a4228"
+      }
+    }, "g"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        color: "#8a6520",
+        fontFamily: "'Noto Sans JP',sans-serif",
+        marginBottom: 8,
+        wordBreak: "break-all"
+      }
+    }, formulaLabel(group.items, setting)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#f0ebe0",
+        borderRadius: 12,
+        border: "1px solid #d0c4a8",
+        overflow: "hidden"
+      }
+    }, group.items.map((c, i) => {
+      const g = grams[i] || 0;
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "10px 14px",
+          borderBottom: "1px solid #ddd4be"
+        }
+      }, /*#__PURE__*/React.createElement(Swatch, {
+        shade: c.shade,
+        brand: c.brand,
+        size: 20
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          minWidth: 0
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 13,
+          color: "#2c2416",
+          marginBottom: 1
+        }
+      }, c.shade), /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 10,
+          color: "#5a4228"
+        }
+      }, c.brand)), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "baseline",
+          gap: 2
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: "'Cormorant Garamond',serif",
+          fontSize: 22,
+          color: "#8a6520",
+          lineHeight: 1
+        }
+      }, g), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 11,
+          color: "#6a5030"
+        }
+      }, "g")));
+    }), hasDev && /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         alignItems: "center",
         gap: 10,
-        padding: "12px 14px",
-        borderBottom: i < colors.length - 1 ? "1px solid #ddd4be" : "none"
+        padding: "10px 14px",
+        background: "rgba(138,101,32,0.06)",
+        borderBottom: "1px solid #ddd4be"
       }
-    }, /*#__PURE__*/React.createElement(Swatch, {
-      shade: c.shade,
-      brand: c.brand,
-      size: 22
-    }), /*#__PURE__*/React.createElement("div", {
+    }, /*#__PURE__*/React.createElement("div", {
       style: {
         flex: 1,
-        minWidth: 0
+        fontSize: 12,
+        color: "#6a5030"
       }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 13,
-        color: "#2c2416",
-        marginBottom: 1
-      }
-    }, c.shade), /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: "#5a4228"
-      }
-    }, c.brand)), /*#__PURE__*/React.createElement("div", {
-      style: {
-        textAlign: "right",
-        flexShrink: 0
-      }
-    }, /*#__PURE__*/React.createElement("div", {
-      style: {
-        fontSize: 10,
-        color: "#6a5030",
-        marginBottom: 2
-      }
-    }, "\u6BD4\u7387 ", +c.ratio || 1, " \xB7 ", pct, "%"), /*#__PURE__*/React.createElement("div", {
+    }, "\u30AA\u30AD\u30B7 ", setting.developer, " \xB7 ", setting.multiplier || 1, "\u500D"), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         alignItems: "baseline",
-        gap: 2,
-        justifyContent: "flex-end"
+        gap: 2
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
         fontFamily: "'Cormorant Garamond',serif",
-        fontSize: 26,
+        fontSize: 22,
         color: "#8a6520",
         lineHeight: 1
       }
-    }, g), /*#__PURE__*/React.createElement("span", {
+    }, devGrams), /*#__PURE__*/React.createElement("span", {
       style: {
         fontSize: 11,
         color: "#6a5030"
       }
-    }, "g"))));
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      padding: "10px 14px",
-      background: "rgba(138,101,32,0.07)",
-      borderTop: "1px solid rgba(201,168,76,0.2)"
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      color: "#7a5818"
-    }
-  }, "\u5408\u8A08"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: "'Noto Sans JP',sans-serif",
-      fontSize: 20,
-      color: "#8a6520"
-    }
-  }, total, " g")))));
+    }, "g"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "8px 14px",
+        background: "rgba(138,101,32,0.07)"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: "#7a5818"
+      }
+    }, "\u5C0F\u8A08", actualTotal !== total ? ` (\u6307\u5B9A ${total}g)` : ""), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "'Noto Sans JP',sans-serif",
+        fontSize: 16,
+        color: "#8a6520"
+      }
+    }, actualTotal, " g"))));
+  })));
 }
 
 // ===== ブランド設定画面 =====
@@ -2879,50 +2904,96 @@ function BrandSettings({
 }) {
   const [local, setLocal] = useState(() => JSON.parse(JSON.stringify(brands)));
   const [selBrand, setSelBrand] = useState(local[0]?.id || null);
-  const [selLine, setSelLine] = useState(null);
-  const [newLineName, setNewLineName] = useState("");
   const [newShade, setNewShade] = useState("");
+  const [newShadeName, setNewShadeName] = useState("");
   const [newBrandName, setNewBrandName] = useState("");
+  const [shadeFilter, setShadeFilter] = useState("");
   const brand = local.find(b => b.id === selBrand);
-  const line = brand?.lines?.find(l => l.name === selLine);
   const updateBrand = (id, key, val) => setLocal(p => p.map(b => b.id === id ? {
     ...b,
     [key]: val
   } : b));
-  const addLine = () => {
-    if (!newLineName || !selBrand) return;
-    setLocal(p => p.map(b => b.id === selBrand ? {
-      ...b,
-      lines: [...b.lines, {
-        name: newLineName,
-        shades: []
-      }]
-    } : b));
-    setSelLine(newLineName);
-    setNewLineName("");
-  };
-  const removeLine = (bId, lName) => setLocal(p => p.map(b => b.id === bId ? {
-    ...b,
-    lines: b.lines.filter(l => l.name !== lName)
-  } : b));
+  const sortShades = arr => [...arr].sort((a, b) => a.localeCompare(b, undefined, {
+    numeric: true,
+    sensitivity: "base"
+  }));
   const addShade = () => {
-    if (!newShade || !selBrand || !selLine) return;
+    if (!newShade || !selBrand) return;
     setLocal(p => p.map(b => b.id === selBrand ? {
       ...b,
-      lines: b.lines.map(l => l.name === selLine ? {
-        ...l,
-        shades: [...l.shades, newShade]
-      } : l)
+      shades: sortShades([...b.shades, newShade]),
+      shadeNames: newShadeName ? {
+        ...(b.shadeNames || {}),
+        [newShade]: newShadeName
+      } : b.shadeNames
     } : b));
     setNewShade("");
+    setNewShadeName("");
   };
-  const removeShade = sh => setLocal(p => p.map(b => b.id === selBrand ? {
+  const removeShade = sh => setLocal(p => p.map(b => {
+    if (b.id !== selBrand) return b;
+    const shadeNames = {
+      ...(b.shadeNames || {})
+    };
+    const shadeColors = {
+      ...(b.shadeColors || {})
+    };
+    delete shadeNames[sh];
+    delete shadeColors[sh];
+    return {
+      ...b,
+      shades: b.shades.filter(s => s !== sh),
+      shadeNames,
+      shadeColors
+    };
+  }));
+  const updateShadeName = (sh, name) => setLocal(p => p.map(b => b.id === selBrand ? {
     ...b,
-    lines: b.lines.map(l => l.name === selLine ? {
-      ...l,
-      shades: l.shades.filter(s => s !== sh)
-    } : l)
+    shadeNames: {
+      ...(b.shadeNames || {}),
+      [sh]: name
+    }
   } : b));
+  const updateShadeColor = (sh, color) => setLocal(p => p.map(b => b.id === selBrand ? {
+    ...b,
+    shadeColors: {
+      ...(b.shadeColors || {}),
+      [sh]: color
+    }
+  } : b));
+  const familyPrefix = code => {
+    const m = code.match(/^(.+?)\d+$/);
+    return m ? m[1] : null;
+  };
+  const familySiblings = sh => {
+    const prefix = familyPrefix(sh);
+    if (!prefix || !brand) return [];
+    return brand.shades.filter(s => s !== sh && familyPrefix(s) === prefix);
+  };
+  const applyToFamily = sh => {
+    const siblings = familySiblings(sh);
+    if (siblings.length === 0 || !selBrand) return;
+    setLocal(p => p.map(b => {
+      if (b.id !== selBrand) return b;
+      const name = b.shadeNames?.[sh] || "";
+      const color = b.shadeColors?.[sh] || shadeColorHex(sh, b.id);
+      const shadeNames = {
+        ...(b.shadeNames || {})
+      };
+      const shadeColors = {
+        ...(b.shadeColors || {})
+      };
+      siblings.forEach(s => {
+        if (name) shadeNames[s] = name;
+        shadeColors[s] = color;
+      });
+      return {
+        ...b,
+        shadeNames,
+        shadeColors
+      };
+    }));
+  };
   const addBrand = () => {
     if (!newBrandName) return;
     const id = "brand_" + Date.now();
@@ -2932,16 +3003,16 @@ function BrandSettings({
       sublabel: "",
       accent: "#8a6520",
       type: "color",
-      lines: []
+      shades: [],
+      shadeNames: {},
+      shadeColors: {}
     }]);
     setSelBrand(id);
-    setSelLine(null);
     setNewBrandName("");
   };
   const removeBrand = id => {
     setLocal(p => p.filter(b => b.id !== id));
     setSelBrand(local[0]?.id || null);
-    setSelLine(null);
   };
   const s2 = {
     inp: {
@@ -2988,6 +3059,11 @@ function BrandSettings({
       textOverflow: "ellipsis"
     })
   };
+  const filteredShades = sortShades((brand?.shades || []).filter(sh => {
+    if (!shadeFilter) return true;
+    const q = shadeFilter.toLowerCase();
+    return sh.toLowerCase().includes(q) || (brand.shadeNames?.[sh] || "").includes(shadeFilter);
+  }));
   return /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
@@ -3034,7 +3110,7 @@ function BrandSettings({
       color: "#6a5030",
       marginTop: 2
     }
-  }, "\u30E1\u30FC\u30AB\u30FC\u540D\u30FB\u30E9\u30A4\u30F3\u30FB\u8272\u756A\u53F7\u3092\u81EA\u7531\u306B\u7DE8\u96C6")), /*#__PURE__*/React.createElement("button", {
+  }, "\u30E1\u30FC\u30AB\u30FC\u540D\u30FB\u8272\u756A\u53F7\u30FB\u8272\u540D\u30FB\u30A4\u30E1\u30FC\u30B8\u8272\u3092\u81EA\u7531\u306B\u7DE8\u96C6")), /*#__PURE__*/React.createElement("button", {
     onClick: onClose,
     style: {
       background: "none",
@@ -3066,7 +3142,7 @@ function BrandSettings({
     key: b.id,
     onClick: () => {
       setSelBrand(b.id);
-      setSelLine(null);
+      setShadeFilter("");
     },
     style: s2.tab(selBrand === b.id)
   }, b.label))), /*#__PURE__*/React.createElement("div", {
@@ -3187,114 +3263,117 @@ function BrandSettings({
       color: "rgba(220,80,80,0.65)",
       marginTop: 16
     }
-  }, "\u524A\u9664"))), /*#__PURE__*/React.createElement("div", {
+  }, "\u524A\u9664"))), brand.type === "color" && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 10
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s2.lbl
-  }, "\u30E9\u30A4\u30F3\u4E00\u89A7"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 5,
-      flexWrap: "wrap",
-      marginBottom: 8
-    }
-  }, brand.lines.map(l => /*#__PURE__*/React.createElement("div", {
-    key: l.name,
-    style: {
-      display: "flex",
-      alignItems: "center",
-      gap: 3
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setSelLine(selLine === l.name ? null : l.name),
-    style: {
-      ...s2.tab(selLine === l.name),
-      padding: "5px 10px",
-      fontSize: 11
-    }
-  }, l.name), /*#__PURE__*/React.createElement("span", {
-    onClick: () => removeLine(brand.id, l.name),
-    style: {
-      cursor: "pointer",
-      fontSize: 13,
-      color: "rgba(200,70,70,0.5)"
-    }
-  }, "\xD7")))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 6
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    style: {
-      ...s2.inp,
-      flex: 1
-    },
-    placeholder: "\u65B0\u3057\u3044\u30E9\u30A4\u30F3\u540D",
-    value: newLineName,
-    onChange: e => setNewLineName(e.target.value),
-    onKeyDown: e => e.key === "Enter" && addLine()
-  }), /*#__PURE__*/React.createElement("button", {
-    style: s2.sm,
-    onClick: addLine
-  }, "\u8FFD\u52A0"))), line && /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: "rgba(255,255,255,0.02)",
-      border: "1px solid #ddd4be",
-      borderRadius: 10,
-      padding: "12px"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      marginBottom: 10
+      marginBottom: 8
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: s2.lbl
-  }, line.name, " \u306E\u8272\u756A\u53F7"), /*#__PURE__*/React.createElement("span", {
+  }, "\u8272\u756A\u53F7\u4E00\u89A7"), /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 10,
       color: "#6a5030"
     }
-  }, line.shades.length, " \u4EF6")), /*#__PURE__*/React.createElement("div", {
+  }, brand.shades.length, " \u4EF6")), brand.shades.length > 6 && /*#__PURE__*/React.createElement("input", {
     style: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: 5,
+      ...s2.inp,
+      marginBottom: 8,
+      fontSize: 11
+    },
+    placeholder: "\u7D5E\u308A\u8FBC\u307F\uFF08\u8272\u756A\u53F7\u30FB\u8272\u540D\uFF09",
+    value: shadeFilter,
+    onChange: e => setShadeFilter(e.target.value)
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxHeight: 280,
+      overflowY: "auto",
       marginBottom: 10,
-      maxHeight: 150,
-      overflowY: "auto"
+      border: "1px solid #ddd4be",
+      borderRadius: 10,
+      background: "rgba(255,255,255,0.4)"
     }
-  }, line.shades.map(sh => /*#__PURE__*/React.createElement("div", {
+  }, filteredShades.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#6a5030",
+      textAlign: "center",
+      padding: "14px 0"
+    }
+  }, "\u8A72\u5F53\u3059\u308B\u8272\u756A\u53F7\u304C\u3042\u308A\u307E\u305B\u3093") : filteredShades.map((sh, i) => /*#__PURE__*/React.createElement("div", {
     key: sh,
     style: {
       display: "flex",
       alignItems: "center",
-      gap: 4,
-      padding: "3px 8px",
-      borderRadius: 12,
-      background: "rgba(138,101,32,0.07)",
-      border: "1px solid #d0c4a8"
+      gap: 6,
+      padding: "6px 8px",
+      borderBottom: i < filteredShades.length - 1 ? "1px solid #e5dcc5" : "none"
     }
   }, /*#__PURE__*/React.createElement(Swatch, {
     shade: sh,
     brand: brand.id,
-    size: 10
+    size: 18
   }), /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 11,
-      color: "#5a4228"
+      color: "#5a4228",
+      width: 70,
+      flexShrink: 0,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
     }
-  }, sh), /*#__PURE__*/React.createElement("span", {
+  }, sh), /*#__PURE__*/React.createElement("input", {
+    style: {
+      ...s2.inp,
+      flex: 1,
+      padding: "5px 8px",
+      fontSize: 11
+    },
+    placeholder: "\u8272\u540D\uFF08\u4F8B: \u30A2\u30C3\u30B7\u30E5\uFF09",
+    value: brand.shadeNames?.[sh] || "",
+    onChange: e => updateShadeName(sh, e.target.value)
+  }), /*#__PURE__*/React.createElement("input", {
+    type: "color",
+    value: brand.shadeColors?.[sh] || shadeColorHex(sh, brand.id),
+    onChange: e => updateShadeColor(sh, e.target.value),
+    style: {
+      width: 28,
+      height: 26,
+      border: "1px solid #d0c4a8",
+      borderRadius: 5,
+      cursor: "pointer",
+      padding: 0,
+      flexShrink: 0
+    }
+  }), familySiblings(sh).length > 0 && /*#__PURE__*/React.createElement("span", {
+    onClick: () => applyToFamily(sh),
+    title: `\u540C\u3058${familyPrefix(sh)}\u7CFB\u306E\u4ED6\u306E\u8272\u756A\u53F7(${familySiblings(sh).join("\u3001")})\u306B\u3053\u306E\u8272\u540D\u30FB\u30A4\u30E1\u30FC\u30B8\u8272\u3092\u9069\u7528`,
+    style: {
+      cursor: "pointer",
+      fontSize: 10,
+      color: "#8a6520",
+      background: "rgba(138,101,32,0.1)",
+      border: "1px solid rgba(138,101,32,0.3)",
+      borderRadius: 5,
+      padding: "3px 6px",
+      whiteSpace: "nowrap",
+      flexShrink: 0
+    }
+  }, "\u540C\u7CFB\u8272\u306B\u9069\u7528"), /*#__PURE__*/React.createElement("span", {
     onClick: () => removeShade(sh),
     style: {
       cursor: "pointer",
-      fontSize: 12,
+      fontSize: 13,
       color: "rgba(200,70,70,0.5)",
-      lineHeight: 1
+      lineHeight: 1,
+      flexShrink: 0
     }
   }, "\xD7")))), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -3306,21 +3385,23 @@ function BrandSettings({
       ...s2.inp,
       flex: 1
     },
-    placeholder: "\u8272\u756A\u53F7\u3092\u8FFD\u52A0\uFF08\u4F8B: A9, YY-Pink, V7\uFF09",
+    placeholder: "\u8272\u756A\u53F7\uFF08\u4F8B: A9, YY-Pink, V7\uFF09",
     value: newShade,
-    onChange: e => setNewShade(e.target.value),
+    onChange: e => setNewShade(toHalfWidth(e.target.value)),
+    onKeyDown: e => e.key === "Enter" && addShade()
+  }), /*#__PURE__*/React.createElement("input", {
+    style: {
+      ...s2.inp,
+      flex: 1
+    },
+    placeholder: "\u8272\u540D\uFF08\u4F8B: \u30A2\u30C3\u30B7\u30E5\uFF09\u4EFB\u610F",
+    value: newShadeName,
+    onChange: e => setNewShadeName(e.target.value),
     onKeyDown: e => e.key === "Enter" && addShade()
   }), /*#__PURE__*/React.createElement("button", {
     style: s2.sm,
     onClick: addShade
-  }, "\u8FFD\u52A0"))), !selLine && brand.lines.length > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: "#6a5030",
-      textAlign: "center",
-      padding: "12px 0"
-    }
-  }, "\u2191 \u30E9\u30A4\u30F3\u3092\u9078\u629E\u3057\u3066\u8272\u756A\u53F7\u3092\u7DE8\u96C6"))), /*#__PURE__*/React.createElement("div", {
+  }, "\u8FFD\u52A0"))))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "12px 20px",
       borderTop: "1px solid rgba(255,255,255,0.06)",
@@ -3391,6 +3472,36 @@ function calcRatio(amounts) {
     ratioStr: normalized.map(fmt).join(" : "),
     pcts
   };
+}
+function groupColorsBySection(colors) {
+  const order = [];
+  const map = {};
+  colors.forEach(c => {
+    const key = sectionLabel(c.section) || "";
+    if (!map[key]) {
+      map[key] = [];
+      order.push(key);
+    }
+    map[key].push(c);
+  });
+  return order.map(key => ({
+    key,
+    label: key || "\u5206\u985E\u672A\u8A2D\u5B9A",
+    items: map[key]
+  }));
+}
+function formulaLabel(items, devSetting) {
+  if (!items.length) return "";
+  const {
+    ratioStr
+  } = calcRatio(items.map(c => +c.ratio || 1));
+  const names = items.map(c => c.shade).join("\uFF1A");
+  const base = `${ratioStr}\uFF08${names}\uFF09`;
+  if (devSetting && devSetting.developer && devSetting.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09") {
+    const mult = devSetting.multiplier || 1;
+    return `${base}\uFF1A\u30AA\u30AD\u30B7${devSetting.developer}\uFF08${mult}\u500D\uFF09`;
+  }
+  return base;
 }
 
 // ===== 画像パネルコンポーネント =====
@@ -3957,7 +4068,10 @@ const TIPS_DATA = [{
 const TIPS_CATEGORIES = [...new Set(TIPS_DATA.map(t => t.category))];
 // ===== Tips ビューコンポーネント =====
 
-function DataManagementView() {
+function DataManagementView({
+  onRecipesImported,
+  onBrandsImported
+}) {
   const [recipes, setLocalRecipes] = React.useState(() => {
     try { return JSON.parse(localStorage.getItem('couleur_recipes') || '[]'); } catch(e) { return []; }
   });
@@ -3967,7 +4081,9 @@ function DataManagementView() {
   const handleExport = async () => {
     try {
       const allRecipes = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
-      const data = { version: 1, exportedAt: new Date().toISOString(), recipes: allRecipes };
+      let brandsData = null;
+      try { brandsData = JSON.parse(localStorage.getItem('couleur_brands') || 'null'); } catch(e) {}
+      const data = { version: 2, exportedAt: new Date().toISOString(), recipes: allRecipes, brands: brandsData };
       const json = JSON.stringify(data, null, 2);
       const now = new Date();
       const ymd = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
@@ -3977,7 +4093,7 @@ function DataManagementView() {
         const file = new File([blob], filename, {type:'application/json'});
         if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
           await navigator.share({files:[file], title:'Couleurバックアップ'});
-          setExportMsg('✅ ' + allRecipes.length + '件をエクスポートしました');
+          setExportMsg('✅ ' + allRecipes.length + '件のレシピとカラー剤マスタをエクスポートしました');
           setTimeout(() => setExportMsg(null), 3000);
           return;
         }
@@ -3989,7 +4105,7 @@ function DataManagementView() {
         a.href = url; a.download = filename;
         document.body.appendChild(a); a.click();
         setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-        setExportMsg('✅ ' + allRecipes.length + '件をエクスポートしました');
+        setExportMsg('✅ ' + allRecipes.length + '件のレシピとカラー剤マスタをエクスポートしました');
         setTimeout(() => setExportMsg(null), 3000);
         return;
       } catch(e) {}
@@ -4009,7 +4125,7 @@ function DataManagementView() {
     reader.onload = (ev) => {
       try {
         const parsed = JSON.parse(ev.target.result);
-        const imported = parsed.recipes || parsed;
+        const imported = Array.isArray(parsed) ? parsed : parsed.recipes;
         if (!Array.isArray(imported)) throw new Error('不正なフォーマット');
         const current = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
         const existingIds = new Set(current.map(r => r.id));
@@ -4017,8 +4133,15 @@ function DataManagementView() {
         const merged = [...current, ...newOnes];
         localStorage.setItem('couleur_recipes', JSON.stringify(merged));
         setLocalRecipes(merged);
-        setImportMsg('✅ ' + newOnes.length + '件を追加しました（重複スキップ: ' + (imported.length - newOnes.length) + '件）');
-        setTimeout(() => setImportMsg(null), 4000);
+        if (onRecipesImported) onRecipesImported(merged);
+        let brandsMsg = '';
+        if (!Array.isArray(parsed) && Array.isArray(parsed.brands)) {
+          localStorage.setItem('couleur_brands', JSON.stringify(parsed.brands));
+          if (onBrandsImported) onBrandsImported(parsed.brands);
+          brandsMsg = '／カラー剤マスタも復元しました';
+        }
+        setImportMsg('✅ ' + newOnes.length + '件のレシピを追加しました（重複スキップ: ' + (imported.length - newOnes.length) + '件）' + brandsMsg);
+        setTimeout(() => setImportMsg(null), 6000);
       } catch(err) {
         setImportMsg('❌ ファイルの読み込みに失敗しました');
         setTimeout(() => setImportMsg(null), 3000);
@@ -4039,7 +4162,7 @@ function DataManagementView() {
     /*#__PURE__*/React.createElement("div", {style:card},
       /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Noto Sans JP',sans-serif", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📤 エクスポート"),
       /*#__PURE__*/React.createElement("button", {style:btn, onClick:handleExport}, "バックアップファイルを作成"),
-      /*#__PURE__*/React.createElement("p", {style:desc}, "現在保存されているレシピ（", recipes.length, "件）をJSONファイルとして書き出します。機種変更や端末間の共有にご利用ください。"),
+      /*#__PURE__*/React.createElement("p", {style:desc}, "現在保存されているレシピ（", recipes.length, "件）とカラー剤マスタ（メーカー・色番号・色名・イメージ色）をまとめてJSONファイルとして書き出します。機種変更や端末間の共有にご利用ください。"),
       exportMsg && /*#__PURE__*/React.createElement("div", {style: exportMsg.startsWith('✅') ? msgOk : msgNg}, exportMsg)
     ),
     /*#__PURE__*/React.createElement("div", {style:card},
@@ -4048,7 +4171,7 @@ function DataManagementView() {
         "バックアップファイルを読み込む",
         /*#__PURE__*/React.createElement("input", {type:"file", accept:".json,application/json", onChange:handleImport, style:{display:'none'}})
       ),
-      /*#__PURE__*/React.createElement("p", {style:desc}, "以前エクスポートしたJSONファイルを選択してください。既存のレシピは残したまま新しいレシピのみ追加します。"),
+      /*#__PURE__*/React.createElement("p", {style:desc}, "以前エクスポートしたJSONファイルを選択してください。レシピは既存のものを残したまま新しいレシピのみ追加します。カラー剤マスタが含まれている場合は上書き復元されます（反映には画面の再読み込みが必要です）。"),
       importMsg && /*#__PURE__*/React.createElement("div", {style: importMsg.startsWith('✅') ? msgOk : msgNg}, importMsg)
     ),
     /*#__PURE__*/React.createElement("div", {style:{...card, background:'rgba(247,243,236,0.6)'}},
@@ -4262,6 +4385,115 @@ function levelLabel(lv) {
   if (lv <= 20) return `B${lv - 13}（ブリーチ ${lv - 13}回）`;
   return `Lv.${lv - 7}`;
 }
+const ON_COLOR_SECTIONS = [{
+  key: "root",
+  label: "根元"
+}, {
+  key: "middle",
+  label: "中間"
+}, {
+  key: "middleToTip",
+  label: "中間〜毛先"
+}, {
+  key: "tip",
+  label: "毛先"
+}, {
+  key: "highlight",
+  label: "ハイライト"
+}, {
+  key: "inner",
+  label: "インナー"
+}, {
+  key: "other",
+  label: "その他カラー"
+}];
+function sectionLabel(sec) {
+  if (!sec) return "";
+  const found = ON_COLOR_SECTIONS.find(s => s.key === sec);
+  return found ? found.label : sec;
+}
+const KANA_TO_ROMAJI = {
+  "きゃ": "kya", "きゅ": "kyu", "きょ": "kyo",
+  "しゃ": "sha", "しゅ": "shu", "しょ": "sho",
+  "ちゃ": "cha", "ちゅ": "chu", "ちょ": "cho",
+  "にゃ": "nya", "にゅ": "nyu", "にょ": "nyo",
+  "ひゃ": "hya", "ひゅ": "hyu", "ひょ": "hyo",
+  "みゃ": "mya", "みゅ": "myu", "みょ": "myo",
+  "りゃ": "rya", "りゅ": "ryu", "りょ": "ryo",
+  "ぎゃ": "gya", "ぎゅ": "gyu", "ぎょ": "gyo",
+  "じゃ": "ja", "じゅ": "ju", "じょ": "jo",
+  "びゃ": "bya", "びゅ": "byu", "びょ": "byo",
+  "ぴゃ": "pya", "ぴゅ": "pyu", "ぴょ": "pyo",
+  "キャ": "kya", "キュ": "kyu", "キョ": "kyo",
+  "シャ": "sha", "シュ": "shu", "ショ": "sho",
+  "チャ": "cha", "チュ": "chu", "チョ": "cho",
+  "ニャ": "nya", "ニュ": "nyu", "ニョ": "nyo",
+  "ヒャ": "hya", "ヒュ": "hyu", "ヒョ": "hyo",
+  "ミャ": "mya", "ミュ": "myu", "ミョ": "myo",
+  "リャ": "rya", "リュ": "ryu", "リョ": "ryo",
+  "ギャ": "gya", "ギュ": "gyu", "ギョ": "gyo",
+  "ジャ": "ja", "ジュ": "ju", "ジョ": "jo",
+  "ビャ": "bya", "ビュ": "byu", "ビョ": "byo",
+  "ピャ": "pya", "ピュ": "pyu", "ピョ": "pyo",
+  "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
+  "か": "ka", "き": "ki", "く": "ku", "け": "ke", "こ": "ko",
+  "さ": "sa", "し": "shi", "す": "su", "せ": "se", "そ": "so",
+  "た": "ta", "ち": "chi", "つ": "tsu", "て": "te", "と": "to",
+  "な": "na", "に": "ni", "ぬ": "nu", "ね": "ne", "の": "no",
+  "は": "ha", "ひ": "hi", "ふ": "fu", "へ": "he", "ほ": "ho",
+  "ま": "ma", "み": "mi", "む": "mu", "め": "me", "も": "mo",
+  "や": "ya", "ゆ": "yu", "よ": "yo",
+  "ら": "ra", "り": "ri", "る": "ru", "れ": "re", "ろ": "ro",
+  "わ": "wa", "を": "wo", "ん": "n",
+  "が": "ga", "ぎ": "gi", "ぐ": "gu", "げ": "ge", "ご": "go",
+  "ざ": "za", "じ": "ji", "ず": "zu", "ぜ": "ze", "ぞ": "zo",
+  "だ": "da", "ぢ": "ji", "づ": "zu", "で": "de", "ど": "do",
+  "ば": "ba", "び": "bi", "ぶ": "bu", "べ": "be", "ぼ": "bo",
+  "ぱ": "pa", "ぴ": "pi", "ぷ": "pu", "ぺ": "pe", "ぽ": "po",
+  "ア": "a", "イ": "i", "ウ": "u", "エ": "e", "オ": "o",
+  "カ": "ka", "キ": "ki", "ク": "ku", "ケ": "ke", "コ": "ko",
+  "サ": "sa", "シ": "shi", "ス": "su", "セ": "se", "ソ": "so",
+  "タ": "ta", "チ": "chi", "ツ": "tsu", "テ": "te", "ト": "to",
+  "ナ": "na", "ニ": "ni", "ヌ": "nu", "ネ": "ne", "ノ": "no",
+  "ハ": "ha", "ヒ": "hi", "フ": "fu", "ヘ": "he", "ホ": "ho",
+  "マ": "ma", "ミ": "mi", "ム": "mu", "メ": "me", "モ": "mo",
+  "ヤ": "ya", "ユ": "yu", "ヨ": "yo",
+  "ラ": "ra", "リ": "ri", "ル": "ru", "レ": "re", "ロ": "ro",
+  "ワ": "wa", "ヲ": "wo", "ン": "n",
+  "ガ": "ga", "ギ": "gi", "グ": "gu", "ゲ": "ge", "ゴ": "go",
+  "ザ": "za", "ジ": "ji", "ズ": "zu", "ゼ": "ze", "ゾ": "zo",
+  "ダ": "da", "ヂ": "ji", "ヅ": "zu", "デ": "de", "ド": "do",
+  "バ": "ba", "ビ": "bi", "ブ": "bu", "ベ": "be", "ボ": "bo",
+  "パ": "pa", "ピ": "pi", "プ": "pu", "ペ": "pe", "ポ": "po",
+  "っ": "", "ッ": "", "ー": ""
+};
+function toRomaji(str) {
+  let result = "";
+  let i = 0;
+  while (i < str.length) {
+    const two = str.substr(i, 2);
+    if (KANA_TO_ROMAJI[two] !== undefined) {
+      result += KANA_TO_ROMAJI[two];
+      i += 2;
+      continue;
+    }
+    const one = str[i];
+    if (KANA_TO_ROMAJI[one] !== undefined) {
+      result += KANA_TO_ROMAJI[one];
+      i += 1;
+      continue;
+    }
+    result += one;
+    i += 1;
+  }
+  return result;
+}
+function normalizeShadeQuery(str) {
+  return toRomaji(str || "").toLowerCase();
+}
+function toHalfWidth(str) {
+  return (str || "").replace(/[\uFF01-\uFF5E]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)).replace(/\u3000/g, " ").replace(/\uFF0D/g, "-");
+}
 function App() {
   // LocalStorage から読み込み（初回）。なければINITIAL_RECIPESを使用
   const [recipes, setRecipes] = useState(() => {
@@ -4272,7 +4504,20 @@ function App() {
       return INITIAL_RECIPES;
     }
   });
-  const [brands, setBrands] = useState(DEFAULT_BRANDS);
+  const [brands, setBrands] = useState(() => {
+    try {
+      const s = localStorage.getItem('couleur_brands');
+      return s ? JSON.parse(s) : DEFAULT_BRANDS;
+    } catch {
+      return DEFAULT_BRANDS;
+    }
+  });
+  const saveBrands = updated => {
+    try {
+      localStorage.setItem('couleur_brands', JSON.stringify(updated));
+    } catch (e) {}
+    setBrands(updated);
+  };
 
   // レシピ変更時にLocalStorageへ自動保存
   const saveRecipes = updated => {
@@ -4304,11 +4549,12 @@ function App() {
   const [form, setForm] = useState(null);
   const [nc, setNc] = useState({
     brand: "edol",
-    line: "",
     shade: "",
+    section: "",
     ratio: 1
   });
   const [ncMode, setNcMode] = useState("preset"); // "preset" | "free"
+  const [shadeOpen, setShadeOpen] = useState(false);
   const [newTag, setNewTag] = useState("");
   const [nb, setNb] = useState({
     brand: "",
@@ -4331,12 +4577,30 @@ function App() {
   const bleachBrands = useMemo(() => brands.filter(b => b.type === "bleach"), [brands]);
   const getBrand = id => brands.find(b => b.id === id);
   const accent = id => getBrand(id)?.accent || "#8a6520";
-  const getLinesOf = bId => getBrand(bId)?.lines || [];
-  const getShadesOf = (bId, lName) => getLinesOf(bId).find(l => l.name === lName)?.shades || [];
+  const getAllShadesOf = bId => getBrand(bId)?.shades || [];
+  const getShadeName = (bId, code) => getBrand(bId)?.shadeNames?.[code] || "";
+  useEffect(() => {
+    const map = {};
+    brands.forEach(b => {
+      if (b.shadeColors) Object.entries(b.shadeColors).forEach(([code, color]) => {
+        if (color) map[code] = color;
+      });
+    });
+    SHADE_COLOR_OVERRIDES = map;
+  }, [brands]);
   const filtered = useMemo(() => recipes.filter(r => {
     const q = search.toLowerCase();
-    return !q || r.name.toLowerCase().includes(q) || r.clientName.toLowerCase().includes(q) || r.colors.some(c => c.shade.toLowerCase().includes(q)) || r.tags.some(t => t.includes(q));
+    return !q || r.name.toLowerCase().includes(q) || r.colors.some(c => c.shade.toLowerCase().includes(q)) || r.tags.some(t => t.includes(q));
   }), [recipes, search]);
+  const sectionSuggestions = useMemo(() => {
+    const seen = [];
+    const add = label => {
+      if (label && !seen.includes(label)) seen.push(label);
+    };
+    ON_COLOR_SECTIONS.forEach(s => add(s.label));
+    recipes.forEach(r => (r.colors || []).forEach(c => add(sectionLabel(c.section))));
+    return seen;
+  }, [recipes]);
   const filteredByCat = useMemo(() => {
     let base = filterCat ? (() => {
       const ids = new Set(getCatRecipes(filterCat, recipes).map(r => r.id));
@@ -4358,7 +4622,6 @@ function App() {
   const selected = recipes.find(r => r.id === selId);
   const openNew = () => {
     const firstColor = colorBrands[0];
-    const firstLine = firstColor?.lines[0]?.name || "";
     setForm({
       id: Date.now(),
       name: "",
@@ -4370,6 +4633,7 @@ function App() {
       colors: [],
       developer: "6%",
       developerAmount: 60,
+      developerBySection: {},
       processingTime: 30,
       technique: "",
       notes: "",
@@ -4380,19 +4644,39 @@ function App() {
     });
     setNc({
       brand: firstColor?.id || "edol",
-      line: firstLine,
       shade: "",
+      section: "",
       ratio: 1
     });
     setBleachOpen(false);
     setView("form");
   };
   const openEdit = r => {
+    const legacyBySection = {};
+    if (!r.developerBySection) {
+      groupColorsBySection(r.colors).forEach(g => {
+        const dev = g.items.find(c => c.developer && c.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09");
+        if (dev) legacyBySection[g.key] = {
+          developer: dev.developer,
+          multiplier: dev.developerRatio || 1
+        };
+      });
+    }
     setForm({
       ...r,
-      colors: r.colors.map(c => ({
-        ...c
-      })),
+      colors: r.colors.map(c => {
+        const {
+          developer,
+          developerRatio,
+          developerAmount,
+          ...rest
+        } = c;
+        return {
+          ...rest,
+          section: sectionLabel(c.section)
+        };
+      }),
+      developerBySection: r.developerBySection || legacyBySection,
       tags: [...r.tags],
       bleach: r.bleach ? {
         ...r.bleach
@@ -4437,12 +4721,23 @@ function App() {
   };
   const addColor = () => {
     if (!nc.shade) return;
-    setForm(f => ({
-      ...f,
-      colors: [...f.colors, {
-        ...nc
-      }]
-    }));
+    setForm(f => {
+      const key = sectionLabel(nc.section) || "";
+      const existing = (f.developerBySection || {})[key];
+      return {
+        ...f,
+        colors: [...f.colors, {
+          ...nc
+        }],
+        developerBySection: {
+          ...(f.developerBySection || {}),
+          [key]: existing || {
+            developer: "6%",
+            multiplier: 1
+          }
+        }
+      };
+    });
     setNc(c => ({
       ...c,
       shade: "",
@@ -4656,13 +4951,7 @@ function App() {
       height: "100%",
       objectFit: "cover"
     }
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: "#6a5030",
-      marginBottom: 7
-    }
-  }, r.clientName, " \xB7 ", r.date), r.bleach && /*#__PURE__*/React.createElement("div", {
+  }))), r.bleach && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 7
     }
@@ -4839,17 +5128,27 @@ function App() {
     id: "data",
     label: "データ管理",
     icon: "🗂️"
+  }, {
+    id: "settings",
+    label: "設定",
+    icon: "⚙️"
   }];
-  const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : view === "data" ? "data" : "list";
+  const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : view === "data" ? "data" : view === "settings" ? "settings" : "list";
   return /*#__PURE__*/React.createElement("div", {
     style: s.app
-  }, /*#__PURE__*/React.createElement("style", null, css), showCalc && /*#__PURE__*/React.createElement(GramCalculator, {
+  }, /*#__PURE__*/React.createElement("style", null, css), /*#__PURE__*/React.createElement("datalist", {
+    id: "section-suggestions"
+  }, sectionSuggestions.map(label => /*#__PURE__*/React.createElement("option", {
+    key: label,
+    value: label
+  }))), showCalc && /*#__PURE__*/React.createElement(GramCalculator, {
     colors: view === "form" && form ? form.colors : selected?.colors || [],
+    developerBySection: view === "form" && form ? form.developerBySection : selected?.developerBySection || {},
     onClose: () => setShowCalc(false)
   }), showSettings && /*#__PURE__*/React.createElement(BrandSettings, {
     brands: brands,
     onSave: b => {
-      setBrands(b);
+      saveBrands(b);
     },
     onClose: () => setShowSettings(false)
   }), /*#__PURE__*/React.createElement("div", {
@@ -4912,19 +5211,7 @@ function App() {
       background: sortOrder === v ? "rgba(138,101,32,0.18)" : "rgba(138,101,32,0.05)",
       color: sortOrder === v ? "#7a5818" : "#9a8060"
     }
-  }, l)))), /*#__PURE__*/React.createElement("button", {
-    onClick: () => setShowSettings(true),
-    style: {
-      background: "rgba(138,101,32,0.07)",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      padding: "5px 10px",
-      cursor: "pointer",
-      fontSize: 11,
-      color: "#6a5030",
-      fontFamily: "'Noto Sans JP',sans-serif"
-    }
-  }, "\u2699 \u7DE8\u96C6"))), view === "list" && /*#__PURE__*/React.createElement("input", {
+  }, l)))))), view === "list" && /*#__PURE__*/React.createElement("input", {
     style: s.search,
     placeholder: "\u30EC\u30B7\u30D4\u540D\u30FB\u304A\u5BA2\u69D8\u540D\u30FB\u8272\u540D\u3067\u691C\u7D22...",
     value: search,
@@ -5338,12 +5625,6 @@ function App() {
     }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
-      fontSize: 14,
-      color: "#6a5030",
-      marginTop: 4
-    }
-  }, selected.clientName, " \xB7 ", selected.date), /*#__PURE__*/React.createElement("div", {
-    style: {
       display: "flex",
       gap: 4,
       flexWrap: "wrap",
@@ -5517,7 +5798,7 @@ function App() {
     const updateRatio = (idx, val) => {
       const updated = selected.colors.map((c, i) => i === idx ? {
         ...c,
-        ratio: Math.max(0.01, Math.round((+val || 0.01) * 100) / 100)
+        ratio: Math.max(0.1, Math.round((+val || 0.1) * 10) / 10)
       } : c);
       setRecipes(recipes.map(r => r.id === selected.id ? {
         ...r,
@@ -5607,7 +5888,29 @@ function App() {
         fontSize: 14,
         color: "#8a6520"
       }
-    }, "= ", ratioStr)), selected.colors.map((c, i) => {
+    }, "= ", ratioStr)), groupColorsBySection(selected.colors).map((group, gi) => {
+      const legacyDev = group.items.find(c => c.developer && c.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09");
+      const setting = (selected.developerBySection || {})[group.key] || (legacyDev ? {
+        developer: legacyDev.developer,
+        multiplier: legacyDev.developerRatio || 1
+      } : {
+        developer: "6%",
+        multiplier: 1
+      });
+      return /*#__PURE__*/React.createElement(React.Fragment, {
+        key: group.key || "none"
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          fontSize: 11,
+          color: "#8a6520",
+          fontFamily: "'Noto Sans JP',sans-serif",
+          marginBottom: 6,
+          marginTop: gi > 0 ? 12 : 0,
+          paddingBottom: 4,
+          borderBottom: "1px solid rgba(138,101,32,0.15)"
+        }
+      }, group.label, group.items.length > 0 && ` \u2014 ${formulaLabel(group.items, setting)}`), group.items.map(c => {
+      const i = selected.colors.indexOf(c);
       const pct = pcts[i] || 0;
       return /*#__PURE__*/React.createElement("div", {
         key: i,
@@ -5640,7 +5943,7 @@ function App() {
           color: accent(c.brand),
           marginBottom: 1
         }
-      }, c.brand, " \xB7 ", c.line), /*#__PURE__*/React.createElement("div", {
+      }, c.brand), /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: 15,
           color: "#2c2416"
@@ -5669,13 +5972,13 @@ function App() {
         }
       }, "\u6BD4\u7387"), /*#__PURE__*/React.createElement("input", {
         type: "number",
-        min: 0.01,
+        min: 0.1,
         max: 99,
-        step: 0.01,
+        step: 0.1,
         value: +c.ratio || 1,
         onChange: e => updateRatio(i, e.target.value),
         style: {
-          width: 44,
+          width: 66,
           padding: "2px 5px",
           textAlign: "center",
           fontSize: 20,
@@ -5686,18 +5989,8 @@ function App() {
           borderRadius: 6,
           outline: "none"
         }
-      })))), /*#__PURE__*/React.createElement("input", {
-        type: "range",
-        min: 0.01,
-        max: 20,
-        step: 0.01,
-        value: Math.min(+c.ratio || 0.01, 20),
-        onChange: e => updateRatio(i, e.target.value),
-        style: {
-          width: "100%",
-          accentColor: swatchColor(c.shade, c.brand)
-        }
-      }));
+      })))));
+    }));
     }), /*#__PURE__*/React.createElement("div", {
       style: {
         borderTop: "1px solid rgba(255,255,255,0.07)",
@@ -5706,7 +5999,7 @@ function App() {
         flexWrap: "wrap",
         gap: 14
       }
-    }, selected.developer !== "なし（塩基性）" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    }, (!selected.developerBySection || Object.keys(selected.developerBySection).length === 0) && !selected.colors.some(c => c.developer) && selected.developer !== "なし（塩基性）" && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
       style: {
         fontSize: 12,
         color: "#6a5030"
@@ -5865,40 +6158,6 @@ function App() {
     }))
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      display: "flex",
-      gap: 10,
-      marginBottom: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u304A\u5BA2\u69D8\u540D"), /*#__PURE__*/React.createElement("input", {
-    style: s.inp,
-    placeholder: "\u7530\u4E2D \u7F8E\u54B2",
-    value: form.clientName,
-    onChange: e => setForm(p => ({
-      ...p,
-      clientName: e.target.value
-    }))
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u65BD\u8853\u65E5"), /*#__PURE__*/React.createElement("input", {
-    type: "date",
-    style: s.inp,
-    value: form.date,
-    onChange: e => setForm(p => ({
-      ...p,
-      date: e.target.value
-    }))
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
       marginBottom: 12
     }
   }, /*#__PURE__*/React.createElement("label", {
@@ -5989,8 +6248,8 @@ function App() {
     onClick: () => setNb(c => ({
       ...c,
       brand: b.id,
-      line: b.lines[0]?.name || "",
-      shade: b.lines[0]?.shades[0] || ""
+      line: "",
+      shade: b.shades?.[0] || ""
     })),
     style: {
       flex: 1,
@@ -6269,107 +6528,220 @@ function App() {
         color: "#9a7528"
       }
     }, "=\xA0", ratioStr));
-  })(), form.colors.map((c, i) => {
-    const tot = form.colors.reduce((s, cc) => s + (+cc.ratio || 1), 0);
+  })(), groupColorsBySection(form.colors).map((group, gi) => {
     const {
       pcts
     } = calcRatio(form.colors.map(c => +c.ratio || 1));
-    const pct = pcts[i] || 0;
-    return /*#__PURE__*/React.createElement("div", {
-      key: i,
-      style: {
-        marginBottom: 7,
-        padding: "8px 10px",
-        borderRadius: 9,
-        background: `${accent(c.brand)}0d`,
-        border: `1px solid ${accent(c.brand)}28`
+    const setting = (form.developerBySection || {})[group.key] || {
+      developer: "6%",
+      multiplier: 1
+    };
+    const updateSetting = patch => setForm(f => ({
+      ...f,
+      developerBySection: {
+        ...(f.developerBySection || {}),
+        [group.key]: {
+          ...setting,
+          ...patch
+        }
       }
+    }));
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: group.key || "none"
     }, /*#__PURE__*/React.createElement("div", {
       style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 7
+        fontSize: 11,
+        color: "#8a6520",
+        fontFamily: "'Noto Sans JP',sans-serif",
+        marginBottom: 6,
+        marginTop: gi > 0 ? 14 : 0,
+        paddingBottom: 4,
+        borderBottom: "1px solid rgba(138,101,32,0.15)"
       }
-    }, /*#__PURE__*/React.createElement(Swatch, {
-      shade: c.shade,
-      brand: c.brand,
-      size: 16
+    }, group.label), group.items.map(c => {
+      const i = form.colors.indexOf(c);
+      const pct = pcts[i] || 0;
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        style: {
+          marginBottom: 7,
+          padding: "8px 10px",
+          borderRadius: 9,
+          background: `${accent(c.brand)}0d`,
+          border: `1px solid ${accent(c.brand)}28`
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 7
+        }
+      }, /*#__PURE__*/React.createElement(Swatch, {
+        shade: c.shade,
+        brand: c.brand,
+        size: 16
+      }), /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1,
+          fontSize: 11,
+          minWidth: 0,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: accent(c.brand)
+        }
+      }, c.brand), /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#6a5030"
+        }
+      }, " \xB7 "), /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#4a3420"
+        }
+      }, c.shade)), /*#__PURE__*/React.createElement("input", {
+        value: c.section || "",
+        list: "section-suggestions",
+        placeholder: "\u90E8\u4F4D",
+        onChange: e => setForm(f => ({
+          ...f,
+          colors: f.colors.map((cc, j) => j === i ? {
+            ...cc,
+            section: e.target.value
+          } : cc)
+        })),
+        style: {
+          fontSize: 9,
+          width: 56,
+          padding: "1px 3px",
+          borderRadius: 8,
+          background: "rgba(138,101,32,0.1)",
+          color: "#8a6520",
+          marginRight: 4,
+          flexShrink: 0,
+          border: "1px solid rgba(138,101,32,0.25)",
+          fontFamily: "'Noto Sans JP',sans-serif"
+        }
+      }), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: "#6a5030",
+          marginRight: 4
+        }
+      }, pct, "%"), /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          flexShrink: 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 9,
+          color: "#8a7058"
+        }
+      }, "\u6BD4\u7387"), /*#__PURE__*/React.createElement("input", {
+        type: "number",
+        min: 0.1,
+        max: 99,
+        step: 0.1,
+        value: +c.ratio || 1,
+        onChange: e => setForm(f => ({
+          ...f,
+          colors: f.colors.map((cc, j) => j === i ? {
+            ...cc,
+            ratio: Math.max(0.1, Math.round((+e.target.value || 0.1) * 10) / 10)
+          } : cc)
+        })),
+        style: {
+          width: 78,
+          padding: "2px 5px",
+          textAlign: "center",
+          fontSize: 18,
+          fontFamily: "'Noto Sans JP',sans-serif",
+          color: "#8a6520",
+          background: "rgba(138,101,32,0.06)",
+          border: "1px solid rgba(138,101,32,0.4)",
+          borderRadius: 6,
+          outline: "none"
+        }
+      })), /*#__PURE__*/React.createElement("span", {
+        onClick: () => setForm(f => ({
+          ...f,
+          colors: f.colors.filter((_, j) => j !== i)
+        })),
+        style: {
+          cursor: "pointer",
+          color: "rgba(210,70,70,0.5)",
+          fontSize: 14,
+          flexShrink: 0
+        }
+      }, "\xD7")));
     }), /*#__PURE__*/React.createElement("div", {
       style: {
-        flex: 1,
-        fontSize: 11,
-        minWidth: 0,
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: accent(c.brand)
-      }
-    }, c.brand), /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#6a5030"
-      }
-    }, " \xB7 "), /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#4a3420"
-      }
-    }, c.shade)), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 10,
-        color: "#6a5030",
-        marginRight: 4
-      }
-    }, pct, "%"), /*#__PURE__*/React.createElement("div", {
-      style: {
         display: "flex",
         alignItems: "center",
-        gap: 2,
-        flexShrink: 0
+        gap: 8,
+        padding: "6px 8px",
+        marginBottom: 10,
+        background: "rgba(138,101,32,0.05)",
+        borderRadius: 8
       }
     }, /*#__PURE__*/React.createElement("span", {
       style: {
-        fontSize: 9,
-        color: "#8a7058"
+        fontSize: 10,
+        color: "#8a7058",
+        flexShrink: 0
       }
-    }, "\u6BD4\u7387"), /*#__PURE__*/React.createElement("input", {
-      type: "number",
-      min: 0.01,
-      max: 99,
-      step: 0.01,
-      value: +c.ratio || 1,
-      onChange: e => setForm(f => ({
-        ...f,
-        colors: f.colors.map((cc, j) => j === i ? {
-          ...cc,
-          ratio: Math.max(0.01, Math.round((+e.target.value || 0.01) * 100) / 100)
-        } : cc)
-      })),
+    }, "\u30AA\u30AD\u30B7"), /*#__PURE__*/React.createElement("select", {
+      value: setting.developer,
+      onChange: e => updateSetting({
+        developer: e.target.value
+      }),
       style: {
-        width: 52,
-        padding: "2px 5px",
+        fontSize: 11,
+        padding: "3px 5px",
+        borderRadius: 6,
+        background: "#fff",
+        color: "#6a5030",
+        border: "1px solid rgba(138,101,32,0.3)",
+        fontFamily: "'Noto Sans JP',sans-serif"
+      }
+    }, ["2%", "3%", "6%", "9%", "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09"].map(d => /*#__PURE__*/React.createElement("option", {
+      key: d,
+      value: d
+    }, d))), setting.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("input", {
+      type: "number",
+      min: 0.1,
+      max: 10,
+      step: 0.1,
+      value: setting.multiplier,
+      onChange: e => updateSetting({
+        multiplier: Math.max(0.1, +e.target.value || 1)
+      }),
+      style: {
+        width: 44,
+        padding: "3px 5px",
         textAlign: "center",
-        fontSize: 18,
-        fontFamily: "'Noto Sans JP',sans-serif",
-        color: "#8a6520",
-        background: "rgba(138,101,32,0.06)",
-        border: "1px solid rgba(138,101,32,0.4)",
+        fontSize: 11,
+        color: "#6a5030",
+        background: "#fff",
+        border: "1px solid rgba(138,101,32,0.3)",
         borderRadius: 6,
         outline: "none"
       }
-    })), /*#__PURE__*/React.createElement("span", {
+    }), /*#__PURE__*/React.createElement("span", {
       style: {
-        cursor: "pointer",
-        color: "rgba(210,70,70,0.5)",
-        fontSize: 14,
-        flexShrink: 0
-      },
-      onClick: () => setForm(f => ({
-        ...f,
-        colors: f.colors.filter((_, j) => j !== i)
-      }))
-    }, "\xD7")));
+        fontSize: 10,
+        color: "#8a7058",
+        whiteSpace: "nowrap"
+      }
+    }, "\u500D\uFF08", (() => {
+      const ratioSum = group.items.reduce((s, cc) => s + (+cc.ratio || 1), 0);
+      return ratioSum || 1;
+    })(), "g\u5206\u306E\u5834\u5408 \xD7 ", setting.multiplier || 1, "\u500D\uFF09"))));
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -6391,7 +6763,7 @@ function App() {
       fontFamily: "'Noto Sans JP',sans-serif",
       fontSize: 11,
       background: ncMode === mode ? "rgba(201,168,76,0.65)" : "rgba(255,255,255,0.03)",
-      color: ncMode === mode ? "#8a6520" : "rgba(232,221,208,0.65)"
+      color: ncMode === mode ? "#8a6520" : "#6a5030"
     }
   }, mode === "preset" ? "プリセットから選択" : "手動入力"))), ncMode === "preset" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6405,7 +6777,6 @@ function App() {
     onClick: () => setNc(c => ({
       ...c,
       brand: b.id,
-      line: b.lines[0]?.name || "",
       shade: "",
       ratio: c.ratio || 1
     })),
@@ -6418,56 +6789,82 @@ function App() {
       fontFamily: "'Noto Sans JP',sans-serif",
       background: nc.brand === b.id ? `${b.accent}25` : "rgba(255,255,255,0.04)",
       border: `1px solid ${nc.brand === b.id ? b.accent + "55" : "rgba(255,255,255,0.1)"}`,
-      color: nc.brand === b.id ? b.accent : "rgba(232,221,208,0.65)",
+      color: nc.brand === b.id ? b.accent : "#6a5030",
       minWidth: 0
     }
-  }, b.label))), /*#__PURE__*/React.createElement("div", {
+  }, b.label))), (() => {
+    const q = normalizeShadeQuery(nc.shade);
+    const rawQuery = nc.shade || "";
+    const matches = q ? getAllShadesOf(nc.brand).filter(sh => {
+      if (sh.toLowerCase().startsWith(q)) return true;
+      const name = getShadeName(nc.brand, sh);
+      if (!name) return false;
+      return name.includes(rawQuery) || normalizeShadeQuery(name).startsWith(q);
+    }) : [];
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginBottom: 8,
+        position: "relative"
+      }
+    }, /*#__PURE__*/React.createElement("label", {
+      style: s.lbl
+    }, "\u8272\u756A\u53F7"), /*#__PURE__*/React.createElement("input", {
+      style: s.inp,
+      placeholder: "\u982D\u6587\u5B57\u3092\u5165\u529B\uFF08\u3072\u3089\u304C\u306A\u30FB\u30AB\u30BF\u30AB\u30CA\u30FB\u5C0F\u6587\u5B57\u3082\u53EF\uFF09",
+      value: nc.shade,
+      onFocus: () => setShadeOpen(true),
+      onChange: e => {
+        setNc(c => ({
+          ...c,
+          shade: toHalfWidth(e.target.value)
+        }));
+        setShadeOpen(true);
+      },
+      onBlur: () => setTimeout(() => setShadeOpen(false), 150)
+    }), shadeOpen && matches.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        top: "100%",
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        maxHeight: 180,
+        overflowY: "auto",
+        background: "#fff",
+        border: "1px solid #d0c4a8",
+        borderRadius: 8,
+        marginTop: 2,
+        boxShadow: "0 4px 10px rgba(0,0,0,0.15)"
+      }
+    }, matches.map(sh => {
+      const shName = getShadeName(nc.brand, sh);
+      return /*#__PURE__*/React.createElement("div", {
+        key: sh,
+        onMouseDown: () => {
+          setNc(c => ({
+            ...c,
+            shade: sh
+          }));
+          setShadeOpen(false);
+        },
+        style: {
+          padding: "7px 10px",
+          fontSize: 13,
+          cursor: "pointer",
+          color: "#2c2416",
+          borderBottom: "1px solid rgba(0,0,0,0.05)"
+        }
+      }, sh, shName && /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 11,
+          color: "#8a7058",
+          marginLeft: 6
+        }
+      }, shName));
+    })));
+  })()), ncMode === "free" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 8
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u30E9\u30A4\u30F3"), /*#__PURE__*/React.createElement("select", {
-    style: s.sel,
-    value: nc.line,
-    onChange: e => setNc(c => ({
-      ...c,
-      line: e.target.value,
-      shade: "",
-      ratio: c.ratio || 1
-    }))
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "\u30E9\u30A4\u30F3\u3092\u9078\u629E"), getLinesOf(nc.brand).map(l => /*#__PURE__*/React.createElement("option", {
-    key: l.name,
-    value: l.name
-  }, l.name)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 8
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u8272\u756A\u53F7"), /*#__PURE__*/React.createElement("select", {
-    style: s.sel,
-    value: nc.shade,
-    onChange: e => setNc(c => ({
-      ...c,
-      shade: e.target.value
-    }))
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "\u8272\u756A\u53F7\u3092\u9078\u629E"), getShadesOf(nc.brand, nc.line).map(sh => /*#__PURE__*/React.createElement("option", {
-    key: sh,
-    value: sh
-  }, sh))))), ncMode === "free" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      gap: 8,
-      marginBottom: 8
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1.2
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: s.lbl
@@ -6484,23 +6881,6 @@ function App() {
     }))
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      flex: 1.5
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u30E9\u30A4\u30F3\u540D"), /*#__PURE__*/React.createElement("input", {
-    style: {
-      ...s.inp,
-      fontSize: 12
-    },
-    placeholder: "\u4F8B\uFF1A\u30B7\u30A7\u30FC\u30C9\u30AB\u30E9\u30FC",
-    value: nc.line,
-    onChange: e => setNc(c => ({
-      ...c,
-      line: e.target.value
-    }))
-  }))), /*#__PURE__*/React.createElement("div", {
-    style: {
       marginBottom: 8
     }
   }, /*#__PURE__*/React.createElement("label", {
@@ -6514,7 +6894,7 @@ function App() {
     value: nc.shade,
     onChange: e => setNc(c => ({
       ...c,
-      shade: e.target.value
+      shade: toHalfWidth(e.target.value)
     }))
   }))), nc.shade && /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6543,6 +6923,48 @@ function App() {
     }
   }, nc.shade)), /*#__PURE__*/React.createElement("div", {
     style: {
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      ...s.lbl,
+      margin: 0,
+      marginBottom: 3
+    }
+  }, "\u67D3\u8272\u90E8\u5206"), /*#__PURE__*/React.createElement("input", {
+    style: s.inp,
+    list: "section-suggestions",
+    placeholder: "\u4F8B\uFF1A\u6839\u5143\u30012cm\u5E45\u3001\u524D\u9AEA\u5468\u308A \u306A\u3069\u81EA\u7531\u306B\u5165\u529B",
+    value: nc.section || "",
+    onChange: e => setNc(c => ({
+      ...c,
+      section: e.target.value
+    }))
+  }), sectionSuggestions.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 4,
+      marginTop: 5
+    }
+  }, sectionSuggestions.map(label => /*#__PURE__*/React.createElement("span", {
+    key: label,
+    onClick: () => setNc(c => ({
+      ...c,
+      section: label
+    })),
+    style: {
+      fontSize: 10,
+      padding: "3px 8px",
+      borderRadius: 10,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans JP',sans-serif",
+      background: nc.section === label ? "rgba(201,168,76,0.3)" : "rgba(138,101,32,0.07)",
+      color: nc.section === label ? "#7a5818" : "#8a7058",
+      border: `1px solid ${nc.section === label ? "rgba(201,168,76,0.6)" : "rgba(138,101,32,0.15)"}`
+    }
+  }, label)))), /*#__PURE__*/React.createElement("div", {
+    style: {
       display: "flex",
       alignItems: "center",
       gap: 10
@@ -6554,31 +6976,17 @@ function App() {
       whiteSpace: "nowrap"
     }
   }, "\u914D\u5206\u6BD4\u7387"), /*#__PURE__*/React.createElement("input", {
-    type: "range",
-    min: 0.01,
-    max: 20,
-    step: 0.01,
-    value: Math.min(+nc.ratio || 0.01, 20),
-    onChange: e => setNc(c => ({
-      ...c,
-      ratio: Math.round(+e.target.value * 100) / 100
-    })),
-    style: {
-      flex: 1,
-      accentColor: swatchColor(nc.shade, nc.brand)
-    }
-  }), /*#__PURE__*/React.createElement("input", {
     type: "number",
-    min: 0.01,
+    min: 0.1,
     max: 99,
-    step: 0.01,
+    step: 0.1,
     value: +nc.ratio || 1,
     onChange: e => setNc(c => ({
       ...c,
-      ratio: Math.max(0.01, Math.round((+e.target.value || 0.01) * 100) / 100)
+      ratio: Math.max(0.1, Math.round((+e.target.value || 0.1) * 10) / 10)
     })),
     style: {
-      width: 52,
+      width: 78,
       padding: "4px 6px",
       textAlign: "center",
       fontSize: 20,
@@ -6609,36 +7017,6 @@ function App() {
       marginBottom: 12
     }
   }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1.5
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u30AA\u30AD\u30B7\u6FC3\u5EA6"), /*#__PURE__*/React.createElement("select", {
-    style: s.sel,
-    value: form.developer,
-    onChange: e => setForm(p => ({
-      ...p,
-      developer: e.target.value
-    }))
-  }, ["2%", "3%", "6%", "9%", "なし（塩基性）"].map(d => /*#__PURE__*/React.createElement("option", {
-    key: d,
-    value: d
-  }, d)))), form.developer !== "なし（塩基性）" && /*#__PURE__*/React.createElement("div", {
-    style: {
-      flex: 1
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: s.lbl
-  }, "\u30AA\u30AD\u30B7\u91CF(ml)"), /*#__PURE__*/React.createElement("input", {
-    type: "number",
-    style: s.inp,
-    value: form.developerAmount,
-    onChange: e => setForm(p => ({
-      ...p,
-      developerAmount: +e.target.value
-    }))
-  })), /*#__PURE__*/React.createElement("div", {
     style: {
       flex: 1
     }
@@ -6744,7 +7122,52 @@ function App() {
       marginBottom: 0
     },
     onClick: save
-  }, "\u4FDD\u5B58\u3059\u308B"))), view === "tips" && /*#__PURE__*/React.createElement(TipsView, null), view === "data" && /*#__PURE__*/React.createElement(DataManagementView, null), (view === "list" || view === "category" || view === "tips" || view === "data") && /*#__PURE__*/React.createElement("div", {
+  }, "\u4FDD\u5B58\u3059\u308B"))), view === "tips" && /*#__PURE__*/React.createElement(TipsView, null), view === "data" && /*#__PURE__*/React.createElement(DataManagementView, {
+    onRecipesImported: r => setRecipes(r),
+    onBrandsImported: b => setBrands(b)
+  }), view === "settings" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "6px 2px 30px"
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: "'Cormorant Garamond',serif",
+      fontSize: 22,
+      marginBottom: 18,
+      color: "#2c2416"
+    }
+  }, "\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowSettings(true),
+    style: {
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "16px 18px",
+      background: "#fff",
+      border: "1px solid #d4c9b0",
+      borderRadius: 12,
+      cursor: "pointer",
+      fontFamily: "'Noto Sans JP',sans-serif",
+      textAlign: "left"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: "#2c2416",
+      marginBottom: 3
+    }
+  }, "\u30AB\u30E9\u30FC\u5264\u30DE\u30B9\u30BF\u7DE8\u96C6"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#8a7058"
+    }
+  }, "\u30E1\u30FC\u30AB\u30FC\u30FB\u8272\u756A\u53F7\u30FB\u8272\u540D\u30FB\u30A4\u30E1\u30FC\u30B8\u8272\u3092\u7DE8\u96C6")), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18,
+      color: "#8a6520"
+    }
+  }, "\u203A"))), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings") && /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
       bottom: 0,

@@ -2630,8 +2630,10 @@ const Tag = ({
 function GramCalculator({
   colors,
   developerBySection,
+  brands,
   onClose
 }) {
+  const brandLabel = id => (brands || []).find(b => b.id === id)?.label || id;
   const groups = groupColorsBySection(colors);
   const [totals, setTotals] = useState({});
   const getTotal = key => totals[key] ?? 60;
@@ -2803,7 +2805,7 @@ function GramCalculator({
           fontSize: 10,
           color: "#5a4228"
         }
-      }, c.brand)), /*#__PURE__*/React.createElement("div", {
+      }, brandLabel(c.brand))), /*#__PURE__*/React.createElement("div", {
         style: {
           display: "flex",
           alignItems: "baseline",
@@ -2979,11 +2981,12 @@ function BrandSettings({
   const addBrand = () => {
     if (!newBrandName) return;
     const id = "brand_" + Date.now();
+    const edolAccent = local.find(b => b.id === "edol")?.accent || "#8a6520";
     setLocal(p => [...p, {
       id,
       label: newBrandName,
       sublabel: "",
-      accent: "#8a6520",
+      accent: edolAccent,
       type: "color",
       shades: [],
       shadeNames: {},
@@ -3202,7 +3205,20 @@ function BrandSettings({
       cursor: "pointer",
       padding: 0
     }
-  })))), /*#__PURE__*/React.createElement("div", {
+  }), brand.id !== "edol" && /*#__PURE__*/React.createElement("span", {
+    onClick: () => updateBrand(brand.id, "accent", (local.find(x => x.id === "edol") || {}).accent || "#8a6520"),
+    title: "edol\u3068\u540C\u3058\u8272\u306B\u3059\u308B",
+    style: {
+      cursor: "pointer",
+      fontSize: 9,
+      color: "#8a6520",
+      background: "rgba(138,101,32,0.1)",
+      border: "1px solid rgba(138,101,32,0.3)",
+      borderRadius: 5,
+      padding: "3px 5px",
+      whiteSpace: "nowrap"
+    }
+  }, "edol\u3068\u7D71\u4E00")))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 8,
@@ -5014,7 +5030,7 @@ function App() {
 
   // ブランドヘルパー
   const colorBrands = useMemo(() => brands.filter(b => b.type === "color"), [brands]);
-  const bleachBrands = useMemo(() => brands.filter(b => b.type === "bleach"), [brands]);
+  const bleachBrands = useMemo(() => brands, [brands]);
   const getBrand = id => brands.find(b => b.id === id);
   const accent = id => getBrand(id)?.accent || "#8a6520";
   const getAllShadesOf = bId => getBrand(bId)?.shades || [];
@@ -5409,10 +5425,8 @@ function App() {
       color: accent(r.bleach.brand)
     }
   }, "\u2702 ", getBrand(r.bleach.brand)?.label || r.bleach.brand)), (() => {
-    const tot = r.colors.reduce((s, c) => s + (+c.ratio || 1), 0); // ratio sum
-    const {
-      ratioStr
-    } = calcRatio(r.colors.map(c => +c.ratio || 1));
+    const groups = groupColorsBySection(r.colors);
+    const multiGroup = groups.filter(g => g.items.length > 0).length > 1;
     return /*#__PURE__*/React.createElement("div", {
       style: {
         marginBottom: 7
@@ -5448,43 +5462,57 @@ function App() {
       style: {
         color: "#6a5030"
       }
-    }, "\xB7", c.amount, c.unit)))), r.colors.length > 1 && tot > 0 && /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 5,
-        flexWrap: "wrap"
-      }
-    }, r.colors.map((c, i) => /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 2
-      }
-    }, i > 0 && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#6a5030",
-        fontSize: 11
-      }
-    }, "\uFF1A"), /*#__PURE__*/React.createElement(Swatch, {
-      shade: c.shade,
-      brand: c.brand,
-      size: 8
-    }), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontFamily: "var(--font-jp)",
-        fontSize: 13,
-        color: swatchColor(c.shade, c.brand)
-      }
-    }, +c.ratio || 1))), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 10,
-        color: "#8a6520",
-        fontFamily: "var(--font-jp)",
-        marginLeft: 3
-      }
-    }, "\uFF08", ratioStr, "\uFF09")));
+    }, "\xB7", c.amount, c.unit)))), groups.map((group, gi) => {
+      if (group.items.length <= 1) return null;
+      const {
+        ratioStr
+      } = calcRatio(group.items.map(c => +c.ratio || 1));
+      return /*#__PURE__*/React.createElement("div", {
+        key: group.key || "none",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          flexWrap: "wrap",
+          marginTop: gi > 0 ? 3 : 0
+        }
+      }, multiGroup && /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: "#8a7058",
+          marginRight: 1
+        }
+      }, group.label, "\uFF1A"), group.items.map((c, i) => /*#__PURE__*/React.createElement("span", {
+        key: i,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 2
+        }
+      }, i > 0 && /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#6a5030",
+          fontSize: 11
+        }
+      }, "\uFF1A"), /*#__PURE__*/React.createElement(Swatch, {
+        shade: c.shade,
+        brand: c.brand,
+        size: 8
+      }), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: "var(--font-jp)",
+          fontSize: 13,
+          color: swatchColor(c.shade, c.brand)
+        }
+      }, +c.ratio || 1))), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 10,
+          color: "#8a6520",
+          fontFamily: "var(--font-jp)",
+          marginLeft: 3
+        }
+      }, "\uFF08", ratioStr, "\uFF09"));
+    }));
   })(), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -5588,6 +5616,7 @@ function App() {
   }))), showCalc && /*#__PURE__*/React.createElement(GramCalculator, {
     colors: view === "form" && form ? form.colors : selected?.colors || [],
     developerBySection: view === "form" && form ? form.developerBySection : selected?.developerBySection || {},
+    brands: brands,
     onClose: () => setShowCalc(false)
   }), showSettings && /*#__PURE__*/React.createElement(BrandSettings, {
     brands: brands,
@@ -6266,6 +6295,7 @@ function App() {
       ratioStr,
       pcts
     } = calcRatio(selected.colors.map(c => +c.ratio || 1));
+    const groups = groupColorsBySection(selected.colors);
     const updateRatio = (idx, val) => {
       const updated = selected.colors.map((c, i) => i === idx ? {
         ...c,
@@ -6304,62 +6334,77 @@ function App() {
       }
     }, "\u2696 \u30B0\u30E9\u30E0\u8A08\u7B97")), selected.colors.length > 0 && /*#__PURE__*/React.createElement("div", {
       style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 6,
-        flexWrap: "wrap",
         marginBottom: 14,
         padding: "10px 14px",
         borderRadius: 10,
         background: "rgba(138,101,32,0.06)",
         border: "1px solid rgba(138,101,32,0.25)"
       }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color: "#8a6520",
-        marginRight: 4
-      }
-    }, "\u914D\u5206\u6BD4"), selected.colors.map((c, i) => /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4
-      }
-    }, i > 0 && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#8a7058",
-        fontSize: 18,
-        lineHeight: 1,
-        margin: "0 2px"
-      }
-    }, ":"), /*#__PURE__*/React.createElement(Swatch, {
-      shade: c.shade,
-      brand: c.brand,
-      size: 12
-    }), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontFamily: "var(--font-jp)",
-        fontSize: 20,
-        color: "#2c2416",
-        lineHeight: 1
-      }
-    }, +c.ratio || 1), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 11,
-        color: "#8a7058"
-      }
-    }, "(", pcts[i], "%)"))), selected.colors.length > 1 && /*#__PURE__*/React.createElement("span", {
-      style: {
-        marginLeft: "auto",
-        fontFamily: "var(--font-jp)",
-        fontSize: 14,
-        color: "#8a6520"
-      }
-    }, "= ", ratioStr)), groupColorsBySection(selected.colors).map((group, gi) => {
+    }, groups.map((group, gi) => {
+      if (group.items.length === 0) return null;
+      const {
+        ratioStr: gRatioStr,
+        pcts: gPcts
+      } = calcRatio(group.items.map(c => +c.ratio || 1));
+      return /*#__PURE__*/React.createElement("div", {
+        key: group.key || "none",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          flexWrap: "wrap",
+          marginTop: gi > 0 ? 8 : 0
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 11,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "#8a6520",
+          marginRight: 4
+        }
+      }, "\u914D\u5206\u6BD4", groups.length > 1 ? `\uFF08${group.label}\uFF09` : ""), group.items.map((c, i) => {
+        const idx = selected.colors.indexOf(c);
+        return /*#__PURE__*/React.createElement("span", {
+          key: idx,
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4
+          }
+        }, i > 0 && /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: "#8a7058",
+            fontSize: 18,
+            lineHeight: 1,
+            margin: "0 2px"
+          }
+        }, ":"), /*#__PURE__*/React.createElement(Swatch, {
+          shade: c.shade,
+          brand: c.brand,
+          size: 12
+        }), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontFamily: "var(--font-jp)",
+            fontSize: 20,
+            color: "#2c2416",
+            lineHeight: 1
+          }
+        }, +c.ratio || 1), /*#__PURE__*/React.createElement("span", {
+          style: {
+            fontSize: 11,
+            color: "#8a7058"
+          }
+        }, "(", gPcts[i], "%)"));
+      }), group.items.length > 1 && /*#__PURE__*/React.createElement("span", {
+        style: {
+          marginLeft: "auto",
+          fontFamily: "var(--font-jp)",
+          fontSize: 14,
+          color: "#8a6520"
+        }
+      }, "= ", gRatioStr));
+    })), groups.map((group, gi) => {
       const legacyDev = group.items.find(c => c.developer && c.developer !== "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09");
       const setting = (selected.developerBySection || {})[group.key] || (legacyDev ? {
         developer: legacyDev.developer,
@@ -6414,7 +6459,7 @@ function App() {
           color: accent(c.brand),
           marginBottom: 1
         }
-      }, c.brand), /*#__PURE__*/React.createElement("div", {
+      }, getBrand(c.brand)?.label || c.brand), /*#__PURE__*/React.createElement("div", {
         style: {
           fontSize: 15,
           color: "#2c2416"
@@ -6731,7 +6776,7 @@ function App() {
       fontFamily: "var(--font-jp)",
       background: nb.brand === b.id ? `${b.accent}25` : "rgba(255,255,255,0.04)",
       border: `1px solid ${nb.brand === b.id ? b.accent + "55" : "rgba(255,255,255,0.1)"}`,
-      color: nb.brand === b.id ? b.accent : "rgba(232,221,208,0.65)",
+      color: nb.brand === b.id ? b.accent : "#6a5030",
       minWidth: 0
     }
   }, b.label))), /*#__PURE__*/React.createElement("div", {
@@ -6939,66 +6984,69 @@ function App() {
       fontFamily: "var(--font-jp)"
     }
   }, "\u270E \u30DE\u30B9\u30BF\u7DE8\u96C6"))), form.colors.length > 0 && (() => {
-    const tot = form.colors.reduce((s, c) => s + (+c.ratio || 1), 0);
-    if (!tot) return null;
-    const {
-      ratioStr,
-      pcts
-    } = calcRatio(form.colors.map(c => +c.ratio || 1));
-    return /*#__PURE__*/React.createElement("div", {
-      style: {
-        display: "flex",
-        alignItems: "center",
-        gap: 6,
-        flexWrap: "wrap",
-        marginBottom: 10,
-        padding: "7px 11px",
-        borderRadius: 8,
-        background: "#f0ebe0",
-        border: "1px solid #d4c9b0"
-      }
-    }, /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        letterSpacing: "0.2em",
-        textTransform: "uppercase",
-        color: "#8a6520"
-      }
-    }, "\u914D\u5206"), form.colors.map((c, i) => /*#__PURE__*/React.createElement("span", {
-      key: i,
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 3
-      }
-    }, i > 0 && /*#__PURE__*/React.createElement("span", {
-      style: {
-        color: "#6a5030",
-        fontSize: 13
-      }
-    }, "\uFF1A"), /*#__PURE__*/React.createElement(Swatch, {
-      shade: c.shade,
-      brand: c.brand,
-      size: 10
-    }), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontFamily: "var(--font-jp)",
-        fontSize: 16,
-        color: swatchColor(c.shade, c.brand)
-      }
-    }, +c.ratio || 1), /*#__PURE__*/React.createElement("span", {
-      style: {
-        fontSize: 9,
-        color: "#6a5030"
-      }
-    }, "(", pcts[i], "%)"))), /*#__PURE__*/React.createElement("span", {
-      style: {
-        marginLeft: "auto",
-        fontFamily: "var(--font-jp)",
-        fontSize: 12,
-        color: "#9a7528"
-      }
-    }, "=\xA0", ratioStr));
+    const fGroups = groupColorsBySection(form.colors);
+    return /*#__PURE__*/React.createElement(React.Fragment, null, fGroups.map((group, gi) => {
+      if (group.items.length === 0) return null;
+      const {
+        ratioStr: fRatioStr,
+        pcts: fPcts
+      } = calcRatio(group.items.map(c => +c.ratio || 1));
+      return /*#__PURE__*/React.createElement("div", {
+        key: group.key || "none",
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          flexWrap: "wrap",
+          marginBottom: gi < fGroups.length - 1 ? 4 : 10,
+          padding: "7px 11px",
+          borderRadius: 8,
+          background: "#f0ebe0",
+          border: "1px solid #d4c9b0"
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 9,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "#8a6520"
+        }
+      }, "\u914D\u5206", fGroups.length > 1 ? `\uFF08${group.label}\uFF09` : ""), group.items.map((c, i) => /*#__PURE__*/React.createElement("span", {
+        key: i,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 3
+        }
+      }, i > 0 && /*#__PURE__*/React.createElement("span", {
+        style: {
+          color: "#6a5030",
+          fontSize: 13
+        }
+      }, "\uFF1A"), /*#__PURE__*/React.createElement(Swatch, {
+        shade: c.shade,
+        brand: c.brand,
+        size: 10
+      }), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontFamily: "var(--font-jp)",
+          fontSize: 16,
+          color: swatchColor(c.shade, c.brand)
+        }
+      }, +c.ratio || 1), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: 9,
+          color: "#6a5030"
+        }
+      }, "(", fPcts[i], "%)"))), group.items.length > 1 && /*#__PURE__*/React.createElement("span", {
+        style: {
+          marginLeft: "auto",
+          fontFamily: "var(--font-jp)",
+          fontSize: 12,
+          color: "#9a7528"
+        }
+      }, "=\xA0", fRatioStr));
+    }));
   })(), groupColorsBySection(form.colors).map((group, gi) => {
     const {
       pcts
@@ -7064,7 +7112,7 @@ function App() {
         style: {
           color: accent(c.brand)
         }
-      }, c.brand), /*#__PURE__*/React.createElement("span", {
+      }, getBrand(c.brand)?.label || c.brand), /*#__PURE__*/React.createElement("span", {
         style: {
           color: "#6a5030"
         }

@@ -1,11 +1,13 @@
 // Couleur PWA Service Worker
-const CACHE_NAME = 'couleur-v3';
+const CACHE_NAME = 'couleur-v5';
 const URLS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon_192.png',
-  './icon_512.png'
+  './icon_512.png',
+  './icon_192_maskable.png',
+  './icon_512_maskable.png'
 ];
 
 self.addEventListener('install', event => {

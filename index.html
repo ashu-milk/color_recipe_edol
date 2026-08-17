@@ -2615,7 +2615,7 @@ const Tag = ({
     border: "1px solid rgba(138,101,32,0.5)",
     fontSize: 11,
     color: "#8a6520",
-    fontFamily: "'Noto Sans JP',sans-serif"
+    fontFamily: "var(--font-jp)"
   }
 }, label, onRemove && /*#__PURE__*/React.createElement("span", {
   onClick: onRemove,
@@ -2726,7 +2726,7 @@ function GramCalculator({
         fontSize: 12,
         fontWeight: 500,
         color: "#7a5818",
-        fontFamily: "'Noto Sans JP',sans-serif"
+        fontFamily: "var(--font-jp)"
       }
     }, group.label), /*#__PURE__*/React.createElement("div", {
       style: {
@@ -2745,7 +2745,7 @@ function GramCalculator({
         padding: "3px 6px",
         textAlign: "right",
         fontSize: 15,
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         color: "#8a6520",
         background: "rgba(138,101,32,0.06)",
         border: "1px solid rgba(138,101,32,0.4)",
@@ -2761,7 +2761,7 @@ function GramCalculator({
       style: {
         fontSize: 11,
         color: "#8a6520",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         marginBottom: 8,
         wordBreak: "break-all"
       }
@@ -2870,7 +2870,7 @@ function GramCalculator({
       }
     }, "\u5C0F\u8A08", actualTotal !== total ? ` (\u6307\u5B9A ${total}g)` : ""), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 16,
         color: "#8a6520"
       }
@@ -3006,7 +3006,7 @@ function BrandSettings({
       fontSize: 12,
       color: "#2c2416",
       outline: "none",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     lbl: {
       fontSize: 9,
@@ -3022,7 +3022,7 @@ function BrandSettings({
       cursor: "pointer",
       fontSize: 11,
       border: "none",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: "rgba(138,101,32,0.12)",
       color: "#7a5818"
     },
@@ -3032,7 +3032,7 @@ function BrandSettings({
       cursor: "pointer",
       border: "none",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: active ? "rgba(138,101,32,0.12)" : "rgba(138,101,32,0.04)",
       color: active ? "#7a5818" : "#6a5030",
       borderRadius: 7,
@@ -3403,7 +3403,7 @@ function BrandSettings({
       color: "#ede8dd",
       fontSize: 13,
       fontWeight: 500,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       cursor: "pointer"
     }
   }, "\u4FDD\u5B58\u3059\u308B"))));
@@ -3466,7 +3466,7 @@ function CategorySettings({
       fontSize: 12,
       color: "#2c2416",
       outline: "none",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     lbl: {
       fontSize: 9,
@@ -3482,7 +3482,7 @@ function CategorySettings({
       cursor: "pointer",
       fontSize: 11,
       border: "none",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: "rgba(138,101,32,0.12)",
       color: "#7a5818"
     },
@@ -3492,7 +3492,7 @@ function CategorySettings({
       cursor: "pointer",
       border: "none",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: active ? "rgba(138,101,32,0.12)" : "rgba(138,101,32,0.04)",
       color: active ? "#7a5818" : "#6a5030",
       borderRadius: 7,
@@ -3763,7 +3763,7 @@ function CategorySettings({
       color: "#ede8dd",
       fontSize: 13,
       fontWeight: 500,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       cursor: "pointer"
     }
   }, "\u4FDD\u5B58\u3059\u308B"))));
@@ -3813,7 +3813,7 @@ function MixedName({
   }, parts.map((p, i) => /^\d+$/.test(p) ? /*#__PURE__*/React.createElement("span", {
     key: i,
     style: {
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       fontSize: fontSize * scale * 0.9
     }
   }, p) : p)));
@@ -4044,7 +4044,7 @@ function ImagePanel({
         fontSize: 11,
         color: "#2c2416",
         outline: "none",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         marginBottom: 6
       },
       placeholder: "\u753B\u50CFURL\u3092\u8CBC\u308A\u4ED8\u3051",
@@ -4070,7 +4070,7 @@ function ImagePanel({
         color: "#f7f3ec",
         fontSize: 11,
         cursor: "pointer",
-        fontFamily: "'Noto Sans JP',sans-serif"
+        fontFamily: "var(--font-jp)"
       }
     }, "\u6C7A\u5B9A"), /*#__PURE__*/React.createElement("button", {
       onClick: () => setUrlMode(p => ({
@@ -4104,7 +4104,7 @@ function ImagePanel({
         color: "#7a5818",
         fontSize: 11,
         cursor: "pointer",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         whiteSpace: "nowrap"
       }
     }, "\u7AEF\u672B\u304B\u3089\u9078\u629E", /*#__PURE__*/React.createElement("input", {
@@ -4127,7 +4127,7 @@ function ImagePanel({
         color: "#8a7058",
         fontSize: 11,
         cursor: "pointer",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         whiteSpace: "nowrap"
       }
     }, "URL\u3092\u5165\u529B"))));
@@ -4526,21 +4526,21 @@ function DataManagementView({
   };
 
   const card = {background:'#fff', border:'1px solid rgba(201,168,76,0.3)', borderRadius:14, padding:'20px 18px', marginBottom:16};
-  const btn = {display:'block', width:'100%', padding:'13px', borderRadius:10, border:'1px solid rgba(138,101,32,0.5)', background:'#8a6520', color:'#fff', fontFamily:"'Noto Sans JP',sans-serif", fontSize:14, fontWeight:500, cursor:'pointer', textAlign:'center'};
-  const desc = {fontSize:11, color:'#9a8060', lineHeight:1.7, marginTop:8, fontFamily:"'Noto Sans JP',sans-serif"};
+  const btn = {display:'block', width:'100%', padding:'13px', borderRadius:10, border:'1px solid rgba(138,101,32,0.5)', background:'#8a6520', color:'#fff', fontFamily:"var(--font-jp)", fontSize:14, fontWeight:500, cursor:'pointer', textAlign:'center'};
+  const desc = {fontSize:11, color:'#9a8060', lineHeight:1.7, marginTop:8, fontFamily:"var(--font-jp)"};
   const msgOk = {marginTop:10, padding:'8px 12px', borderRadius:8, background:'#f0faf0', color:'#2a7a2a', fontSize:12};
   const msgNg = {marginTop:10, padding:'8px 12px', borderRadius:8, background:'#fff0f0', color:'#c02020', fontSize:12};
 
   return /*#__PURE__*/React.createElement("div", {style:{padding:'16px 16px 100px'}},
     /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Cormorant Garamond',serif", fontSize:22, fontWeight:300, letterSpacing:'0.12em', color:'#7a5818', marginBottom:20, paddingTop:4}}, "Data Management"),
     /*#__PURE__*/React.createElement("div", {style:card},
-      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Noto Sans JP',sans-serif", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📤 エクスポート"),
+      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📤 エクスポート"),
       /*#__PURE__*/React.createElement("button", {style:btn, onClick:handleExport}, "バックアップファイルを作成"),
       /*#__PURE__*/React.createElement("p", {style:desc}, "現在保存されているレシピ（", recipes.length, "件）とカラー剤マスタ（メーカー・色番号・色名・イメージ色）、色味グループ（「色味で探す」の分類）をまとめてJSONファイルとして書き出します。機種変更や端末間の共有にご利用ください。"),
       exportMsg && /*#__PURE__*/React.createElement("div", {style: exportMsg.startsWith('✅') ? msgOk : msgNg}, exportMsg)
     ),
     /*#__PURE__*/React.createElement("div", {style:card},
-      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Noto Sans JP',sans-serif", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📥 インポート"),
+      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📥 インポート"),
       /*#__PURE__*/React.createElement("label", {style:btn},
         "バックアップファイルを読み込む",
         /*#__PURE__*/React.createElement("input", {type:"file", accept:".json,application/json", onChange:handleImport, style:{display:'none'}})
@@ -4549,8 +4549,8 @@ function DataManagementView({
       importMsg && /*#__PURE__*/React.createElement("div", {style: importMsg.startsWith('✅') ? msgOk : msgNg}, importMsg)
     ),
     /*#__PURE__*/React.createElement("div", {style:{...card, background:'rgba(247,243,236,0.6)'}},
-      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Noto Sans JP',sans-serif", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:10}}, "💾 保存状況"),
-      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"'Noto Sans JP',sans-serif", fontSize:12, color:'#7a6040', lineHeight:2}},
+      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:10}}, "💾 保存状況"),
+      /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:12, color:'#7a6040', lineHeight:2}},
         /*#__PURE__*/React.createElement("div", null, "保存レシピ数：", /*#__PURE__*/React.createElement("strong", null, recipes.length), " 件"),
         /*#__PURE__*/React.createElement("div", null, "保存場所：端末のブラウザ（localStorage）"),
         /*#__PURE__*/React.createElement("div", {style:{fontSize:11, color:'#9a8060', marginTop:4}}, "※定期的なバックアップをおすすめします。")
@@ -4577,7 +4577,7 @@ function TipsView() {
       fontSize: 13,
       color: "#2c2416",
       outline: "none",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     dc: {
       background: "#f0ebe0",
@@ -4624,7 +4624,7 @@ function TipsView() {
       border: "none",
       cursor: "pointer",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: !tipsCat ? "rgba(138,101,32,0.15)" : "rgba(138,101,32,0.05)",
       color: !tipsCat ? "#7a5818" : "#9a8060"
     }
@@ -4640,7 +4640,7 @@ function TipsView() {
         border: "none",
         cursor: "pointer",
         fontSize: 11,
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         background: active ? `${first?.categoryColor || "#888"}22` : "rgba(138,101,32,0.05)",
         color: active ? first?.categoryColor || "#7a5818" : "#9a8060"
       }
@@ -4759,6 +4759,36 @@ function levelLabel(lv) {
   if (lv <= 20) return `B${lv - 13}（ブリーチ ${lv - 13}回）`;
   return `Lv.${lv - 7}`;
 }
+const FONT_OPTIONS = [{
+  id: "notoSansJP",
+  label: "ゴシック体（標準）",
+  value: "'Noto Sans JP',sans-serif"
+}, {
+  id: "notoSerifJP",
+  label: "明朝体",
+  value: "'Noto Serif JP',serif"
+}, {
+  id: "mPlusRounded",
+  label: "丸ゴシック体",
+  value: "'M PLUS Rounded 1c',sans-serif"
+}, {
+  id: "zenKaku",
+  label: "角ゴシック体",
+  value: "'Zen Kaku Gothic New',sans-serif"
+}];
+const FONT_WEIGHT_OPTIONS = [{
+  value: 300,
+  label: "細め"
+}, {
+  value: 400,
+  label: "標準"
+}, {
+  value: 500,
+  label: "やや太め"
+}, {
+  value: 700,
+  label: "太め"
+}];
 const ON_COLOR_SECTIONS = [{
   key: "root",
   label: "根元"
@@ -4908,6 +4938,26 @@ function App() {
   };
   const categories = useMemo(() => [...shadeCategories, ...COLOR_CATEGORIES.filter(c => c.type === "flag")], [shadeCategories]);
   const [showCategorySettings, setShowCategorySettings] = useState(false);
+  const [fontSettings, setFontSettings] = useState(() => {
+    try {
+      const s = localStorage.getItem('couleur_font');
+      return s ? JSON.parse(s) : {
+        family: "notoSansJP",
+        weight: 400
+      };
+    } catch {
+      return {
+        family: "notoSansJP",
+        weight: 400
+      };
+    }
+  });
+  const saveFontSettings = updated => {
+    try {
+      localStorage.setItem('couleur_font', JSON.stringify(updated));
+    } catch (e) {}
+    setFontSettings(updated);
+  };
 
   // レシピ変更時にLocalStorageへ自動保存
   const saveRecipes = updated => {
@@ -5151,10 +5201,12 @@ function App() {
     setNewTagVal("");
   };
   const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+JP:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
+    :root{--font-jp:'Noto Sans JP',sans-serif;--font-weight-jp:400;}
     ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#c4b090;border-radius:2px;}
-    input,textarea,select{background:transparent;color:inherit;font-family:inherit;}
+    input,textarea,select{background:transparent;color:inherit;font-family:inherit;font-weight:inherit;}
+    button{font-family:inherit;font-weight:inherit;}
     input::placeholder,textarea::placeholder{color:#b0a080;}
     option{background:#f0ebe0;color:#2c2416;}
     input[type=range]{-webkit-appearance:none;height:4px;background:#d4c9b0;border-radius:2px;}
@@ -5166,7 +5218,7 @@ function App() {
       minHeight: "100vh",
       background: "#f7f3ec",
       color: "#2c2416",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       fontWeight: 300
     },
     hdr: {
@@ -5202,7 +5254,7 @@ function App() {
       color: "#2c2416",
       outline: "none",
       marginTop: 10,
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     addBtn: {
       width: "100%",
@@ -5213,7 +5265,7 @@ function App() {
       color: "#f7f3ec",
       fontSize: 13,
       fontWeight: 500,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       cursor: "pointer",
       letterSpacing: "0.05em",
       marginBottom: 12
@@ -5245,7 +5297,7 @@ function App() {
       fontSize: 13,
       color: "#2c2416",
       outline: "none",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     sel: {
       width: "100%",
@@ -5256,7 +5308,7 @@ function App() {
       fontSize: 13,
       color: "#2c2416",
       outline: "none",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       cursor: "pointer"
     },
     dc: {
@@ -5286,7 +5338,7 @@ function App() {
       color: "#7a5818",
       fontSize: 12,
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     }
   };
   const RecipeCard = ({
@@ -5421,7 +5473,7 @@ function App() {
       size: 8
     }), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 13,
         color: swatchColor(c.shade, c.brand)
       }
@@ -5429,7 +5481,7 @@ function App() {
       style: {
         fontSize: 10,
         color: "#8a6520",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         marginLeft: 3
       }
     }, "\uFF08", ratioStr, "\uFF09")));
@@ -5520,8 +5572,14 @@ function App() {
     icon: "⚙️"
   }];
   const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["data", "settings"].includes(view) ? "settings" : "list";
+  const currentFontValue = (FONT_OPTIONS.find(f => f.id === fontSettings.family) || FONT_OPTIONS[0]).value;
   return /*#__PURE__*/React.createElement("div", {
-    style: s.app
+    style: {
+      ...s.app,
+      "--font-jp": currentFontValue,
+      "--font-weight-jp": fontSettings.weight,
+      fontWeight: fontSettings.weight
+    }
   }, /*#__PURE__*/React.createElement("style", null, css), /*#__PURE__*/React.createElement("datalist", {
     id: "section-suggestions"
   }, sectionSuggestions.map(label => /*#__PURE__*/React.createElement("option", {
@@ -5599,7 +5657,7 @@ function App() {
       border: "none",
       cursor: "pointer",
       fontSize: 10,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: sortOrder === v ? "rgba(138,101,32,0.18)" : "rgba(138,101,32,0.05)",
       color: sortOrder === v ? "#7a5818" : "#9a8060"
     }
@@ -5636,7 +5694,7 @@ function App() {
       outline: `1px solid ${filterCat === "" ? "rgba(201,168,76,0.75)" : "rgba(255,255,255,0.09)"}`,
       color: filterCat === "" ? "#8a6520" : "rgba(232,221,208,0.65)",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     }
   }, "\u3059\u3079\u3066"), categories.map(cat => /*#__PURE__*/React.createElement("button", {
     key: cat.id,
@@ -5654,7 +5712,7 @@ function App() {
       background: filterCat === cat.id ? `${cat.color}22` : "rgba(255,255,255,0.04)",
       outline: `1px solid ${filterCat === cat.id ? cat.color + "65" : "rgba(255,255,255,0.09)"}`,
       color: filterCat === cat.id ? cat.color : "#6a5030",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       position: "relative",
       overflow: "hidden"
     }
@@ -5725,7 +5783,7 @@ function App() {
       cursor: "pointer",
       fontSize: 10,
       color: "#6a5030",
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     }
   }, "\u270E \u8272\u5473\u3092\u7DE8\u96C6")), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -5902,7 +5960,7 @@ function App() {
     }, /*#__PURE__*/React.createElement("div", {
       style: {
         fontSize: 16,
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         color: cat.color
       }
     }, count), /*#__PURE__*/React.createElement("div", {
@@ -6174,7 +6232,7 @@ function App() {
     }, "\u91CF "), /*#__PURE__*/React.createElement("span", {
       style: {
         color: b.accent,
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 16
       }
     }, selected.bleach.amount, selected.bleach.unit)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
@@ -6242,7 +6300,7 @@ function App() {
         background: "rgba(138,101,32,0.07)",
         color: "#8a6520",
         fontSize: 13,
-        fontFamily: "'Noto Sans JP',sans-serif"
+        fontFamily: "var(--font-jp)"
       }
     }, "\u2696 \u30B0\u30E9\u30E0\u8A08\u7B97")), selected.colors.length > 0 && /*#__PURE__*/React.createElement("div", {
       style: {
@@ -6284,7 +6342,7 @@ function App() {
       size: 12
     }), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 20,
         color: "#2c2416",
         lineHeight: 1
@@ -6297,7 +6355,7 @@ function App() {
     }, "(", pcts[i], "%)"))), selected.colors.length > 1 && /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: "auto",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 14,
         color: "#8a6520"
       }
@@ -6316,7 +6374,7 @@ function App() {
         style: {
           fontSize: 11,
           color: "#8a6520",
-          fontFamily: "'Noto Sans JP',sans-serif",
+          fontFamily: "var(--font-jp)",
           marginBottom: 6,
           marginTop: gi > 0 ? 12 : 0,
           paddingBottom: 4,
@@ -6395,7 +6453,7 @@ function App() {
           padding: "2px 5px",
           textAlign: "center",
           fontSize: 20,
-          fontFamily: "'Noto Sans JP',sans-serif",
+          fontFamily: "var(--font-jp)",
           color: "#8a6520",
           background: "rgba(138,101,32,0.06)",
           border: "1px solid rgba(138,101,32,0.4)",
@@ -6630,7 +6688,7 @@ function App() {
       border: `1px solid ${bleachOpen ? "rgba(60,120,180,0.4)" : "#c8b890"}`,
       color: bleachOpen ? "#2060a0" : "#6a5030",
       fontSize: 12,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between"
@@ -6670,7 +6728,7 @@ function App() {
       borderRadius: 7,
       cursor: "pointer",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: nb.brand === b.id ? `${b.accent}25` : "rgba(255,255,255,0.04)",
       border: `1px solid ${nb.brand === b.id ? b.accent + "55" : "rgba(255,255,255,0.1)"}`,
       color: nb.brand === b.id ? b.accent : "rgba(232,221,208,0.65)",
@@ -6825,7 +6883,7 @@ function App() {
       borderRadius: 7,
       cursor: "pointer",
       fontSize: 12,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: "rgba(74,159,212,0.15)",
       border: "1px solid rgba(60,120,180,0.4)",
       color: "#2060a0"
@@ -6863,7 +6921,7 @@ function App() {
       background: "rgba(138,101,32,0.12)",
       color: "#8a6520",
       fontSize: 10,
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     }
   }, "\u2696 \u30B0\u30E9\u30E0\u8A08\u7B97"), /*#__PURE__*/React.createElement("button", {
     onClick: () => setShowSettings(true),
@@ -6878,7 +6936,7 @@ function App() {
       background: "rgba(138,101,32,0.07)",
       color: "#6a5030",
       fontSize: 10,
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     }
   }, "\u270E \u30DE\u30B9\u30BF\u7DE8\u96C6"))), form.colors.length > 0 && (() => {
     const tot = form.colors.reduce((s, c) => s + (+c.ratio || 1), 0);
@@ -6924,7 +6982,7 @@ function App() {
       size: 10
     }), /*#__PURE__*/React.createElement("span", {
       style: {
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 16,
         color: swatchColor(c.shade, c.brand)
       }
@@ -6936,7 +6994,7 @@ function App() {
     }, "(", pcts[i], "%)"))), /*#__PURE__*/React.createElement("span", {
       style: {
         marginLeft: "auto",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         fontSize: 12,
         color: "#9a7528"
       }
@@ -6965,7 +7023,7 @@ function App() {
       style: {
         fontSize: 11,
         color: "#8a6520",
-        fontFamily: "'Noto Sans JP',sans-serif",
+        fontFamily: "var(--font-jp)",
         marginBottom: 6,
         marginTop: gi > 0 ? 14 : 0,
         paddingBottom: 4,
@@ -7035,7 +7093,7 @@ function App() {
           marginRight: 4,
           flexShrink: 0,
           border: "1px solid rgba(138,101,32,0.25)",
-          fontFamily: "'Noto Sans JP',sans-serif"
+          fontFamily: "var(--font-jp)"
         }
       }), /*#__PURE__*/React.createElement("span", {
         style: {
@@ -7073,7 +7131,7 @@ function App() {
           padding: "2px 5px",
           textAlign: "center",
           fontSize: 18,
-          fontFamily: "'Noto Sans JP',sans-serif",
+          fontFamily: "var(--font-jp)",
           color: "#8a6520",
           background: "rgba(138,101,32,0.06)",
           border: "1px solid rgba(138,101,32,0.4)",
@@ -7120,7 +7178,7 @@ function App() {
         background: "#fff",
         color: "#6a5030",
         border: "1px solid rgba(138,101,32,0.3)",
-        fontFamily: "'Noto Sans JP',sans-serif"
+        fontFamily: "var(--font-jp)"
       }
     }, ["2%", "3%", "6%", "9%", "\u306A\u3057\uFF08\u5869\u57FA\u6027\uFF09"].map(d => /*#__PURE__*/React.createElement("option", {
       key: d,
@@ -7173,7 +7231,7 @@ function App() {
       padding: "6px",
       border: "none",
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       fontSize: 11,
       background: ncMode === mode ? "rgba(201,168,76,0.65)" : "rgba(255,255,255,0.03)",
       color: ncMode === mode ? "#8a6520" : "#6a5030"
@@ -7199,7 +7257,7 @@ function App() {
       borderRadius: 7,
       cursor: "pointer",
       fontSize: 11,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: nc.brand === b.id ? `${b.accent}25` : "rgba(255,255,255,0.04)",
       border: `1px solid ${nc.brand === b.id ? b.accent + "55" : "rgba(255,255,255,0.1)"}`,
       color: nc.brand === b.id ? b.accent : "#6a5030",
@@ -7371,7 +7429,7 @@ function App() {
       padding: "3px 8px",
       borderRadius: 10,
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       background: nc.section === label ? "rgba(201,168,76,0.3)" : "rgba(138,101,32,0.07)",
       color: nc.section === label ? "#7a5818" : "#8a7058",
       border: `1px solid ${nc.section === label ? "rgba(201,168,76,0.6)" : "rgba(138,101,32,0.15)"}`
@@ -7403,7 +7461,7 @@ function App() {
       padding: "4px 6px",
       textAlign: "center",
       fontSize: 20,
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       color: "#8a6520",
       background: "rgba(138,101,32,0.06)",
       border: "1px solid rgba(138,101,32,0.4)",
@@ -7420,7 +7478,7 @@ function App() {
       border: `1px solid ${accent(nc.brand)}45`,
       color: accent(nc.brand),
       fontSize: 12,
-      fontFamily: "'Noto Sans JP',sans-serif"
+      fontFamily: "var(--font-jp)"
     },
     onClick: addColor
   }, "\uFF0B \u30AB\u30E9\u30FC\u5264\u3092\u8FFD\u52A0")), /*#__PURE__*/React.createElement("div", {
@@ -7550,7 +7608,7 @@ function App() {
       border: "1px solid #d4c9b0",
       borderRadius: 12,
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       textAlign: "left"
     }
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
@@ -7581,7 +7639,7 @@ function App() {
       border: "1px solid #d4c9b0",
       borderRadius: 12,
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       textAlign: "left",
       marginTop: 10
     }
@@ -7601,7 +7659,90 @@ function App() {
       fontSize: 18,
       color: "#8a6520"
     }
-  }, "\u203A")), /*#__PURE__*/React.createElement("button", {
+  }, "\u203A")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: "100%",
+      padding: "16px 18px",
+      background: "#fff",
+      border: "1px solid #d4c9b0",
+      borderRadius: 12,
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: "#2c2416",
+      marginBottom: 3
+    }
+  }, "\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#8a7058",
+      marginBottom: 12
+    }
+  }, "\u30A2\u30D7\u30EA\u5168\u4F53\u306E\u5B57\u4F53\u30FB\u592A\u3055\u3092\u5909\u66F4"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 9,
+      letterSpacing: "0.2em",
+      textTransform: "uppercase",
+      color: "#8a6520",
+      display: "block",
+      marginBottom: 4
+    }
+  }, "\u5B57\u4F53"), /*#__PURE__*/React.createElement("select", {
+    value: fontSettings.family,
+    onChange: e => saveFontSettings({
+      ...fontSettings,
+      family: e.target.value
+    }),
+    style: {
+      width: "100%",
+      padding: "8px 10px",
+      background: "#f0ebe0",
+      border: "1px solid #c8b890",
+      borderRadius: 7,
+      fontSize: 13,
+      color: "#2c2416",
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)"
+    }
+  }, FONT_OPTIONS.map(f => /*#__PURE__*/React.createElement("option", {
+    key: f.id,
+    value: f.id
+  }, f.label)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 9,
+      letterSpacing: "0.2em",
+      textTransform: "uppercase",
+      color: "#8a6520",
+      display: "block",
+      marginBottom: 4
+    }
+  }, "\u592A\u3055"), /*#__PURE__*/React.createElement("select", {
+    value: fontSettings.weight,
+    onChange: e => saveFontSettings({
+      ...fontSettings,
+      weight: +e.target.value
+    }),
+    style: {
+      width: "100%",
+      padding: "8px 10px",
+      background: "#f0ebe0",
+      border: "1px solid #c8b890",
+      borderRadius: 7,
+      fontSize: 13,
+      color: "#2c2416",
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)"
+    }
+  }, FONT_WEIGHT_OPTIONS.map(w => /*#__PURE__*/React.createElement("option", {
+    key: w.value,
+    value: w.value
+  }, w.label))))), /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("data"),
     style: {
       width: "100%",
@@ -7613,7 +7754,7 @@ function App() {
       border: "1px solid #d4c9b0",
       borderRadius: 12,
       cursor: "pointer",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       textAlign: "left",
       marginTop: 10
     }
@@ -7659,7 +7800,7 @@ function App() {
       alignItems: "center",
       gap: 3,
       color: activeTab === tab.id ? "#7a5818" : "#9a8060",
-      fontFamily: "'Noto Sans JP',sans-serif",
+      fontFamily: "var(--font-jp)",
       transition: "color .15s"
     }
   }, /*#__PURE__*/React.createElement("span", {

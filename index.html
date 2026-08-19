@@ -4524,9 +4524,21 @@ function DataManagementView({
         const imported = Array.isArray(parsed) ? parsed : parsed.recipes;
         if (!Array.isArray(imported)) throw new Error('不正なフォーマット');
         const current = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
-        const existingIds = new Set(current.map(r => r.id));
-        const newOnes = imported.filter(r => !existingIds.has(r.id));
-        const merged = [...current, ...newOnes];
+        const currentMap = new Map(current.map(r => [r.id, r]));
+        let added = 0, updated = 0, unchanged = 0;
+        imported.forEach(r => {
+          const existing = currentMap.get(r.id);
+          if (!existing) {
+            currentMap.set(r.id, r);
+            added++;
+          } else if (JSON.stringify(existing) !== JSON.stringify(r)) {
+            currentMap.set(r.id, r);
+            updated++;
+          } else {
+            unchanged++;
+          }
+        });
+        const merged = Array.from(currentMap.values());
         localStorage.setItem('couleur_recipes', JSON.stringify(merged));
         setLocalRecipes(merged);
         if (onRecipesImported) onRecipesImported(merged);
@@ -4541,7 +4553,7 @@ function DataManagementView({
           if (onCategoriesImported) onCategoriesImported(parsed.categories);
           extraMsg += '／色味グループも復元しました';
         }
-        setImportMsg('✅ ' + newOnes.length + '件のレシピを追加しました（重複スキップ: ' + (imported.length - newOnes.length) + '件）' + extraMsg);
+        setImportMsg(`✅ 追加${added}件・上書き更新${updated}件（変更なし: ${unchanged}件）` + extraMsg);
         setTimeout(() => setImportMsg(null), 6000);
       } catch(err) {
         setImportMsg('❌ ファイルの読み込みに失敗しました');
@@ -4572,7 +4584,7 @@ function DataManagementView({
         "バックアップファイルを読み込む",
         /*#__PURE__*/React.createElement("input", {type:"file", accept:".json,application/json", onChange:handleImport, style:{display:'none'}})
       ),
-      /*#__PURE__*/React.createElement("p", {style:desc}, "以前エクスポートしたJSONファイルを選択してください。レシピは既存のものを残したまま新しいレシピのみ追加します。カラー剤マスタが含まれている場合は上書き復元されます（反映には画面の再読み込みが必要です）。"),
+      /*#__PURE__*/React.createElement("p", {style:desc}, "以前エクスポートしたJSONファイルを選択してください。新しいレシピは追加され、同じレシピ（同一ID）が既に存在する場合は、内容（画像を含む）に変更があればバックアップの内容で上書きされます。変更がなければそのまま残ります。カラー剤マスタ・色味グループが含まれている場合は上書き復元されます。"),
       importMsg && /*#__PURE__*/React.createElement("div", {style: importMsg.startsWith('✅') ? msgOk : msgNg}, importMsg)
     ),
     /*#__PURE__*/React.createElement("div", {style:{...card, background:'rgba(247,243,236,0.6)'}},

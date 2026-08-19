@@ -4460,6 +4460,17 @@ function DataManagementView({
   });
   const [exportMsg, setExportMsg] = React.useState(null);
   const [importMsg, setImportMsg] = React.useState(null);
+  const storageUsedKB = React.useMemo(() => {
+    try {
+      let total = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        total += (k.length + (localStorage.getItem(k) || '').length);
+      }
+      return Math.round(total / 1024);
+    } catch (e) { return 0; }
+  }, [recipes]);
+  const storagePct = Math.min(100, Math.round(storageUsedKB / 5120 * 100));
 
   const handleExport = async () => {
     try {
@@ -4569,6 +4580,15 @@ function DataManagementView({
       /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:12, color:'#7a6040', lineHeight:2}},
         /*#__PURE__*/React.createElement("div", null, "保存レシピ数：", /*#__PURE__*/React.createElement("strong", null, recipes.length), " 件"),
         /*#__PURE__*/React.createElement("div", null, "保存場所：端末のブラウザ（localStorage）"),
+        /*#__PURE__*/React.createElement("div", {style:{display:'flex', alignItems:'center', gap:8, marginTop:6}},
+          /*#__PURE__*/React.createElement("span", null, "使用量：", storageUsedKB >= 1024 ? (storageUsedKB/1024).toFixed(1) + " MB" : storageUsedKB + " KB"),
+          /*#__PURE__*/React.createElement("div", {style:{flex:1, height:6, borderRadius:3, background:'rgba(138,101,32,0.15)', overflow:'hidden'}},
+            /*#__PURE__*/React.createElement("div", {style:{width:storagePct+"%", height:"100%", background: storagePct >= 80 ? '#c05050' : storagePct >= 60 ? '#c9a050' : '#8a6520', borderRadius:3}})
+          )
+        ),
+        storagePct >= 60 && /*#__PURE__*/React.createElement("div", {style:{fontSize:11, color: storagePct >= 80 ? '#c05050' : '#9a7838', marginTop:4, fontWeight:500}},
+          storagePct >= 80 ? "⚠ 容量が残り少なくなっています。写真の多いレシピを整理するか、早めにバックアップを取ってください。" : "容量の目安に近づいています。定期的なバックアップをおすすめします。"
+        ),
         /*#__PURE__*/React.createElement("div", {style:{fontSize:11, color:'#9a8060', marginTop:4}}, "※定期的なバックアップをおすすめします。")
       )
     )
@@ -5000,20 +5020,47 @@ function App() {
     try {
       localStorage.setItem('couleur_recipes', JSON.stringify(updated));
       setRecipes(updated);
-    } catch (e) {
-      // 容量超過時：画像なし版を保存し、画面表示も保存内容と一致させる（表示と保存の不一致を防ぐ）
+      return;
+    } catch (e) {}
+    // 容量超過時：全レシピの写真を一括で消すのではなく、サイズの大きい写真から
+    // 必要な分だけ順番に削除し、収まった時点で止める（被害を最小限にする）
+    let working = updated.map(r => ({
+      ...r
+    }));
+    const photoRefs = [];
+    working.forEach((r, i) => {
+      if (r.imgAfter1) photoRefs.push({
+        i,
+        key: "imgAfter1",
+        size: r.imgAfter1.length
+      });
+      if (r.imgAfter2) photoRefs.push({
+        i,
+        key: "imgAfter2",
+        size: r.imgAfter2.length
+      });
+    });
+    photoRefs.sort((a, b) => b.size - a.size);
+    let removed = 0;
+    for (const ref of photoRefs) {
+      working[ref.i] = {
+        ...working[ref.i],
+        [ref.key]: null
+      };
+      removed++;
       try {
-        const slim = updated.map(r => ({
-          ...r,
-          imgAfter1: r.imgAfter1 ? null : r.imgAfter1,
-          imgAfter2: r.imgAfter2 ? null : r.imgAfter2
-        }));
-        localStorage.setItem('couleur_recipes', JSON.stringify(slim));
-        setRecipes(slim);
-        window.alert('保存容量の上限に達したため、今回追加した写真は保存できませんでした。レシピ本体は保存されています。');
-      } catch {
-        window.alert('保存容量の上限に達したため、今回の変更を保存できませんでした。古いレシピの写真を削除するか、不要なレシピを削除してから再度お試しください。');
-      }
+        localStorage.setItem('couleur_recipes', JSON.stringify(working));
+        setRecipes(working);
+        window.alert(`保存容量の上限に近づいたため、サイズの大きい写真を${removed}枚削除して保存しました。レシピ本体（内容・配合など）は保存されています。「設定」→「データ管理」から早めにバックアップを取ることをおすすめします。`);
+        return;
+      } catch (e) {}
+    }
+    try {
+      localStorage.setItem('couleur_recipes', JSON.stringify(working));
+      setRecipes(working);
+      window.alert('保存容量の上限に達したため、写真をすべて削除して保存しました。レシピ本体は保存されています。不要な古いレシピを削除するか、バックアップ後に整理することをおすすめします。');
+    } catch (e) {
+      window.alert('保存容量の上限に達したため、今回の変更を保存できませんでした。古いレシピや写真を削除してから再度お試しください。');
     }
   };
   const [view, setView] = useState("list");
@@ -5619,7 +5666,7 @@ function App() {
     label: "設定",
     icon: "⚙️"
   }];
-  const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["data", "settings"].includes(view) ? "settings" : "list";
+  const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["data", "settings", "font"].includes(view) ? "settings" : "list";
   const currentFontValue = (FONT_OPTIONS.find(f => f.id === fontSettings.family) || FONT_OPTIONS[0]).value;
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -7728,16 +7775,23 @@ function App() {
       fontSize: 18,
       color: "#8a6520"
     }
-  }, "\u203A")), /*#__PURE__*/React.createElement("div", {
+  }, "\u203A")), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setView("font"),
     style: {
       width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
       padding: "16px 18px",
       background: "#fff",
       border: "1px solid #d4c9b0",
       borderRadius: 12,
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)",
+      textAlign: "left",
       marginTop: 10
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 14,
       color: "#2c2416",
@@ -7746,105 +7800,14 @@ function App() {
   }, "\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 11,
-      color: "#8a7058",
-      marginBottom: 12
+      color: "#8a7058"
     }
-  }, "\u30A2\u30D7\u30EA\u5168\u4F53\u306E\u5B57\u4F53\u30FB\u592A\u3055\u3092\u5909\u66F4"), /*#__PURE__*/React.createElement("div", {
+  }, "\u30A2\u30D7\u30EA\u5168\u4F53\u306E\u5B57\u4F53\u30FB\u592A\u3055\u30FB\u30B5\u30A4\u30BA\u3092\u5909\u66F4")), /*#__PURE__*/React.createElement("span", {
     style: {
-      marginBottom: 10
+      fontSize: 18,
+      color: "#8a6520"
     }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u5B57\u4F53"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.family,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      family: e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_OPTIONS.map(f => /*#__PURE__*/React.createElement("option", {
-    key: f.id,
-    value: f.id
-  }, f.label)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u592A\u3055"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.weight,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      weight: +e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_WEIGHT_OPTIONS.map(w => /*#__PURE__*/React.createElement("option", {
-    key: w.value,
-    value: w.value
-  }, w.label)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 10
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u6587\u5B57\u30B5\u30A4\u30BA"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.scale || 1,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      scale: +e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_SCALE_OPTIONS.map(sc => /*#__PURE__*/React.createElement("option", {
-    key: sc.value,
-    value: sc.value
-  }, sc.label))))), /*#__PURE__*/React.createElement("button", {
+  }, "\u203A")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setView("data"),
     style: {
       width: "100%",
@@ -7876,7 +7839,124 @@ function App() {
       fontSize: 18,
       color: "#8a6520"
     }
-  }, "\u203A"))), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings") && /*#__PURE__*/React.createElement("div", {
+  }, "\u203A"))), view === "font" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "6px 2px 30px"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    style: s.back,
+    onClick: () => setView("settings")
+  }, "\u2190 \u8A2D\u5B9A\u306B\u623B\u308B"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: "'Cormorant Garamond',serif",
+      fontSize: 22,
+      marginBottom: 18,
+      color: "#2c2416"
+    }
+  }, "\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: "100%",
+      padding: "16px 18px",
+      background: "#fff",
+      border: "1px solid #d4c9b0",
+      borderRadius: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 9,
+      letterSpacing: "0.2em",
+      textTransform: "uppercase",
+      color: "#8a6520",
+      display: "block",
+      marginBottom: 4
+    }
+  }, "\u5B57\u4F53"), /*#__PURE__*/React.createElement("select", {
+    value: fontSettings.family,
+    onChange: e => saveFontSettings({
+      ...fontSettings,
+      family: e.target.value
+    }),
+    style: {
+      width: "100%",
+      padding: "8px 10px",
+      background: "#f0ebe0",
+      border: "1px solid #c8b890",
+      borderRadius: 7,
+      fontSize: 13,
+      color: "#2c2416",
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)"
+    }
+  }, FONT_OPTIONS.map(f => /*#__PURE__*/React.createElement("option", {
+    key: f.id,
+    value: f.id
+  }, f.label)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 9,
+      letterSpacing: "0.2em",
+      textTransform: "uppercase",
+      color: "#8a6520",
+      display: "block",
+      marginBottom: 4
+    }
+  }, "\u592A\u3055"), /*#__PURE__*/React.createElement("select", {
+    value: fontSettings.weight,
+    onChange: e => saveFontSettings({
+      ...fontSettings,
+      weight: +e.target.value
+    }),
+    style: {
+      width: "100%",
+      padding: "8px 10px",
+      background: "#f0ebe0",
+      border: "1px solid #c8b890",
+      borderRadius: 7,
+      fontSize: 13,
+      color: "#2c2416",
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)"
+    }
+  }, FONT_WEIGHT_OPTIONS.map(w => /*#__PURE__*/React.createElement("option", {
+    key: w.value,
+    value: w.value
+  }, w.label)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 9,
+      letterSpacing: "0.2em",
+      textTransform: "uppercase",
+      color: "#8a6520",
+      display: "block",
+      marginBottom: 4
+    }
+  }, "\u6587\u5B57\u30B5\u30A4\u30BA"), /*#__PURE__*/React.createElement("select", {
+    value: fontSettings.scale || 1,
+    onChange: e => saveFontSettings({
+      ...fontSettings,
+      scale: +e.target.value
+    }),
+    style: {
+      width: "100%",
+      padding: "8px 10px",
+      background: "#f0ebe0",
+      border: "1px solid #c8b890",
+      borderRadius: 7,
+      fontSize: 13,
+      color: "#2c2416",
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)"
+    }
+  }, FONT_SCALE_OPTIONS.map(sc => /*#__PURE__*/React.createElement("option", {
+    key: sc.value,
+    value: sc.value
+  }, sc.label)))))), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings" || view === "font") && /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
       bottom: 0,

@@ -3787,7 +3787,7 @@ function CategorySettings({
 
 // ===== メインアプリ =====
 
-// 数字のみNoto Sans JP、それ以外はCormorant Garamondで表示
+// レシピ名を表示（フォント設定の書体・太さに追従。狭い幅では自動縮小）
 function MixedName({
   name,
   fontSize,
@@ -3820,7 +3820,8 @@ function MixedName({
     ref: textRef,
     style: {
       display: "inline-block",
-      fontFamily: "'Cormorant Garamond',serif",
+      fontFamily: "var(--font-jp)",
+      fontWeight: "var(--font-weight-jp)",
       fontSize: fontSize * scale,
       color,
       whiteSpace: "nowrap",
@@ -3830,6 +3831,7 @@ function MixedName({
     key: i,
     style: {
       fontFamily: "var(--font-jp)",
+      fontWeight: "var(--font-weight-jp)",
       fontSize: fontSize * scale * 0.9
     }
   }, p) : p)));
@@ -4834,41 +4836,57 @@ const FONT_OPTIONS = [{
   value: "'Noto Serif JP',serif"
 }, {
   id: "mPlusRounded",
-  label: "丸ゴシック体",
+  label: "丸ゴシック",
   value: "'M PLUS Rounded 1c',sans-serif"
 }, {
-  id: "zenKaku",
-  label: "角ゴシック体",
-  value: "'Zen Kaku Gothic New',sans-serif"
-}];
-const FONT_WEIGHT_OPTIONS = [{
-  value: 300,
-  label: "細め"
+  id: "kosugiMaru",
+  label: "丸文字",
+  value: "'Kosugi Maru',sans-serif"
 }, {
-  value: 400,
-  label: "標準"
+  id: "zenMaruGothic",
+  label: "まるもじ",
+  value: "'Zen Maru Gothic',sans-serif"
 }, {
-  value: 500,
-  label: "やや太め"
+  id: "yujiSyuku",
+  label: "筆文字",
+  value: "'Yuji Syuku',serif"
 }, {
-  value: 700,
-  label: "太め"
+  id: "hachiMaruPop",
+  label: "手書き風（ポップ）",
+  value: "'Hachi Maru Pop',cursive"
+}, {
+  id: "kaiseiDecol",
+  label: "装飾体",
+  value: "'Kaisei Decol',serif"
+}, {
+  id: "rocknRollOne",
+  label: "ポップ体",
+  value: "'RocknRoll One',sans-serif"
+}, {
+  id: "reggaeOne",
+  label: "レゲエ体",
+  value: "'Reggae One',cursive"
+}, {
+  id: "dotGothic16",
+  label: "ドット文字",
+  value: "'DotGothic16',sans-serif"
+}, {
+  id: "kleeOne",
+  label: "手書き風（やわらか）",
+  value: "'Klee One',cursive"
 }];
 const FONT_SCALE_OPTIONS = [{
   value: 0.85,
-  label: "小さめ（85%）"
+  label: "小"
 }, {
   value: 1,
-  label: "標準（100%）"
+  label: "標準"
 }, {
-  value: 1.15,
-  label: "やや大きめ（115%）"
+  value: 1.2,
+  label: "大"
 }, {
-  value: 1.3,
-  label: "大きめ（130%）"
-}, {
-  value: 1.5,
-  label: "特大（150%）"
+  value: 1.4,
+  label: "特大"
 }];
 const ON_COLOR_SECTIONS = [{
   key: "root",
@@ -5313,7 +5331,7 @@ function App() {
     setNewTagVal("");
   };
   const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=M+PLUS+Rounded+1c:wght@400;500;700&family=Kosugi+Maru&family=Zen+Maru+Gothic:wght@400;500;700&family=Yuji+Syuku&family=Hachi+Maru+Pop&family=Kaisei+Decol:wght@400;500;700&family=RocknRoll+One&family=Reggae+One&family=DotGothic16&family=Klee+One:wght@400;600&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
     :root{--font-jp:'Noto Sans JP',sans-serif;--font-weight-jp:400;}
     ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#c4b090;border-radius:2px;}
@@ -5697,6 +5715,7 @@ function App() {
   }];
   const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["data", "settings", "font"].includes(view) ? "settings" : "list";
   const currentFontValue = (FONT_OPTIONS.find(f => f.id === fontSettings.family) || FONT_OPTIONS[0]).value;
+  const isBoldFont = fontSettings.weight >= 700;
   return /*#__PURE__*/React.createElement("div", {
     style: {
       ...s.app,
@@ -7883,109 +7902,132 @@ function App() {
       color: "#2c2416"
     }
   }, "\u30D5\u30A9\u30F3\u30C8\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: "100%",
-      padding: "16px 18px",
-      background: "#fff",
-      border: "1px solid #d4c9b0",
-      borderRadius: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 14
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u5B57\u4F53"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.family,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      family: e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_OPTIONS.map(f => /*#__PURE__*/React.createElement("option", {
-    key: f.id,
-    value: f.id
-  }, f.label)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 14
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u592A\u3055"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.weight,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      weight: +e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_WEIGHT_OPTIONS.map(w => /*#__PURE__*/React.createElement("option", {
-    key: w.value,
-    value: w.value
-  }, w.label)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 9,
-      letterSpacing: "0.2em",
-      textTransform: "uppercase",
-      color: "#8a6520",
-      display: "block",
-      marginBottom: 4
-    }
-  }, "\u6587\u5B57\u30B5\u30A4\u30BA"), /*#__PURE__*/React.createElement("select", {
-    value: fontSettings.scale || 1,
-    onChange: e => saveFontSettings({
-      ...fontSettings,
-      scale: +e.target.value
-    }),
-    style: {
-      width: "100%",
-      padding: "8px 10px",
-      background: "#f0ebe0",
-      border: "1px solid #c8b890",
-      borderRadius: 7,
-      fontSize: 13,
-      color: "#2c2416",
-      cursor: "pointer",
-      fontFamily: "var(--font-jp)"
-    }
-  }, FONT_SCALE_OPTIONS.map(sc => /*#__PURE__*/React.createElement("option", {
-    key: sc.value,
-    value: sc.value
-  }, sc.label)))))), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings" || view === "font") && /*#__PURE__*/React.createElement("div", {
+    style: { width: "100%" }
+  },
+    /*#__PURE__*/React.createElement("div", {
+      style: { marginBottom: 20 }
+    },
+      /*#__PURE__*/React.createElement("label", {
+        style: {
+          fontSize: 9,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "#8a6520",
+          display: "block",
+          marginBottom: 10
+        }
+      }, "字体"),
+      /*#__PURE__*/React.createElement("div", {
+        style: { display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10 }
+      }, FONT_OPTIONS.map(f => {
+        const selected = fontSettings.family === f.id;
+        return /*#__PURE__*/React.createElement("button", {
+          key: f.id,
+          type: "button",
+          onClick: () => saveFontSettings({ ...fontSettings, family: f.id }),
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            padding: "14px 4px",
+            borderRadius: 12,
+            border: selected ? "2px solid #8a6520" : "1px solid #e4d9c0",
+            background: selected ? "#faf3e0" : "#fbf8f2",
+            cursor: "pointer"
+          }
+        },
+          /*#__PURE__*/React.createElement("span", {
+            style: { fontFamily: f.value, fontSize: 25, lineHeight: 1, color: selected ? "#8a6520" : "#c3b596" }
+          }, "あ字"),
+          /*#__PURE__*/React.createElement("span", {
+            style: {
+              fontFamily: "var(--font-jp)",
+              fontSize: 11,
+              lineHeight: 1.3,
+              textAlign: "center",
+              color: selected ? "#8a6520" : "#a3936f",
+              fontWeight: selected ? 600 : 400
+            }
+          }, f.label)
+        );
+      }))
+    ),
+    /*#__PURE__*/React.createElement("div", { style: { borderTop: "1px solid #e8ded0", margin: "4px 0 18px" } }),
+    /*#__PURE__*/React.createElement("div", {
+      style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }
+    },
+      /*#__PURE__*/React.createElement("span", {
+        style: { fontFamily: "var(--font-jp)", fontSize: 14, color: "#2c2416" }
+      }, "すべての文字を太字にする"),
+      /*#__PURE__*/React.createElement("button", {
+        type: "button",
+        "aria-pressed": isBoldFont,
+        onClick: () => saveFontSettings({ ...fontSettings, weight: isBoldFont ? 400 : 700 }),
+        style: {
+          position: "relative",
+          width: 46,
+          height: 26,
+          borderRadius: 13,
+          border: "none",
+          background: isBoldFont ? "#8a6520" : "#e4d9c0",
+          cursor: "pointer",
+          flexShrink: 0,
+          padding: 0
+        }
+      },
+        /*#__PURE__*/React.createElement("span", {
+          style: {
+            position: "absolute",
+            top: 3,
+            left: isBoldFont ? 23 : 3,
+            width: 20,
+            height: 20,
+            borderRadius: "50%",
+            background: "#fff",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+            transition: "left .15s"
+          }
+        })
+      )
+    ),
+    /*#__PURE__*/React.createElement("div", { style: { borderTop: "1px solid #e8ded0", margin: "4px 0 18px" } }),
+    /*#__PURE__*/React.createElement("div", null,
+      /*#__PURE__*/React.createElement("label", {
+        style: {
+          fontSize: 9,
+          letterSpacing: "0.2em",
+          textTransform: "uppercase",
+          color: "#8a6520",
+          display: "block",
+          marginBottom: 10
+        }
+      }, "文字サイズ"),
+      /*#__PURE__*/React.createElement("div", {
+        style: { display: "flex", gap: 8 }
+      }, FONT_SCALE_OPTIONS.map(sc => {
+        const selected = (fontSettings.scale || 1) === sc.value;
+        return /*#__PURE__*/React.createElement("button", {
+          key: sc.value,
+          type: "button",
+          onClick: () => saveFontSettings({ ...fontSettings, scale: sc.value }),
+          style: {
+            flex: 1,
+            padding: "10px 4px",
+            borderRadius: 9,
+            border: selected ? "1px solid #8a6520" : "1px solid #e4d9c0",
+            background: selected ? "#8a6520" : "#fbf8f2",
+            color: selected ? "#fff" : "#6b5c3e",
+            fontFamily: "var(--font-jp)",
+            fontSize: 13,
+            fontWeight: selected ? 600 : 400,
+            cursor: "pointer"
+          }
+        }, sc.label);
+      }))
+    )
+  )), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings" || view === "font") && /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
       bottom: 0,

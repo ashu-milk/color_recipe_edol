@@ -429,6 +429,9 @@ const COLOR_CATEGORIES = [{
   type: "flag",
   match: r => r.colors.some(c => c.brand === "edol yoyo")
 }];
+// COLOR_CATEGORIES / DEFAULT_BRANDS の内容を更新するたびにこの数値を上げると、
+// 既にlocalStorageに保存済みのユーザーにも最新のデフォルト内容（絵文字・色番号一覧など）が反映される
+const DATA_SEED_VERSION = 2;
 function getRecipeCategories(recipe, categories) {
   const shadeMap = {};
   categories.filter(c => c.type === "shade").forEach(cat => cat.shades.forEach(sh => {
@@ -5307,8 +5310,18 @@ function App() {
   });
   const [brands, setBrands] = useState(() => {
     try {
+      const storedVersion = parseInt(localStorage.getItem('couleur_brands_version') || '0', 10);
       const s = localStorage.getItem('couleur_brands');
-      return s ? JSON.parse(s) : DEFAULT_BRANDS;
+      if (s && storedVersion >= DATA_SEED_VERSION) {
+        return JSON.parse(s);
+      }
+      const parsed = s ? JSON.parse(s) : [];
+      const defaultIds = new Set(DEFAULT_BRANDS.map(b => b.id));
+      const customBrands = parsed.filter(b => !defaultIds.has(b.id));
+      const merged = [...DEFAULT_BRANDS, ...customBrands];
+      localStorage.setItem('couleur_brands', JSON.stringify(merged));
+      localStorage.setItem('couleur_brands_version', String(DATA_SEED_VERSION));
+      return merged;
     } catch {
       return DEFAULT_BRANDS;
     }
@@ -5316,20 +5329,33 @@ function App() {
   const saveBrands = updated => {
     try {
       localStorage.setItem('couleur_brands', JSON.stringify(updated));
+      localStorage.setItem('couleur_brands_version', String(DATA_SEED_VERSION));
     } catch (e) {}
     setBrands(updated);
   };
   const [shadeCategories, setShadeCategories] = useState(() => {
+    const defaultCats = COLOR_CATEGORIES.filter(c => c.type === "shade");
     try {
+      const storedVersion = parseInt(localStorage.getItem('couleur_categories_version') || '0', 10);
       const s = localStorage.getItem('couleur_categories');
-      return s ? JSON.parse(s) : COLOR_CATEGORIES.filter(c => c.type === "shade");
+      if (s && storedVersion >= DATA_SEED_VERSION) {
+        return JSON.parse(s);
+      }
+      const parsed = s ? JSON.parse(s) : [];
+      const defaultIds = new Set(defaultCats.map(c => c.id));
+      const customCats = parsed.filter(c => !defaultIds.has(c.id));
+      const merged = [...defaultCats, ...customCats];
+      localStorage.setItem('couleur_categories', JSON.stringify(merged));
+      localStorage.setItem('couleur_categories_version', String(DATA_SEED_VERSION));
+      return merged;
     } catch {
-      return COLOR_CATEGORIES.filter(c => c.type === "shade");
+      return defaultCats;
     }
   });
   const saveCategories = updated => {
     try {
       localStorage.setItem('couleur_categories', JSON.stringify(updated));
+      localStorage.setItem('couleur_categories_version', String(DATA_SEED_VERSION));
     } catch (e) {}
     setShadeCategories(updated);
   };

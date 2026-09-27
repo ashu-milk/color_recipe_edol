@@ -3658,25 +3658,52 @@ function BrandSettings({
 // ===== 色味グループ編集画面 =====
 function CategorySettings({
   categories,
+  brands,
   onSave,
   onClose
 }) {
   const [local, setLocal] = useState(() => JSON.parse(JSON.stringify(categories)));
   const [selCat, setSelCat] = useState(local[0]?.id || null);
   const [newShade, setNewShade] = useState("");
+  const [shadeOpen, setShadeOpen] = useState(false);
   const [newCatLabel, setNewCatLabel] = useState("");
   const cat = local.find(c => c.id === selCat);
+  const allShades = useMemo(() => {
+    const map = new Map();
+    (brands || []).forEach(b => {
+      (b.shades || []).forEach(sh => {
+        if (!map.has(sh)) map.set(sh, {
+          code: sh,
+          name: b.shadeNames?.[sh] || ""
+        });
+      });
+    });
+    return Array.from(map.values());
+  }, [brands]);
+  const shadeQuery = normalizeShadeQuery(newShade);
+  const shadeMatches = shadeQuery ? allShades.filter(({
+    code,
+    name
+  }) => {
+    if (code.toLowerCase().startsWith(shadeQuery)) return true;
+    if (!name) return false;
+    return name.includes(newShade) || normalizeShadeQuery(name).startsWith(shadeQuery);
+  }).filter(({
+    code
+  }) => !(cat?.shades || []).includes(code)) : [];
   const updateCat = (id, key, val) => setLocal(p => p.map(c => c.id === id ? {
     ...c,
     [key]: val
   } : c));
-  const addShade = () => {
-    if (!newShade || !selCat) return;
+  const addShade = codeOverride => {
+    const code = codeOverride || newShade;
+    if (!code || !selCat) return;
     setLocal(p => p.map(c => c.id === selCat ? {
       ...c,
-      shades: [...c.shades, toHalfWidth(newShade)]
+      shades: [...c.shades, toHalfWidth(code)]
     } : c));
     setNewShade("");
+    setShadeOpen(false);
   };
   const removeShade = sh => setLocal(p => p.map(c => c.id === selCat ? {
     ...c,
@@ -3977,18 +4004,59 @@ function CategorySettings({
       display: "flex",
       gap: 6
     }
-  }, /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      ...s2.inp,
+      position: "relative",
       flex: 1
-    },
-    placeholder: "\u8272\u756A\u53F7\u3092\u8FFD\u52A0\uFF08\u4F8B: A9, YY-Pink\uFF09",
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    style: s2.inp,
+    placeholder: "\u30A2\u30EB\u30D5\u30A1\u30D9\u30C3\u30C8\u3084\u8AAD\u307F\u65B9\u306E\u982D\u6587\u5B57\u3067\u691C\u7D22\uFF08\u4F8B: A, \u3042\u3063\u3057\u3085\uFF09",
     value: newShade,
-    onChange: e => setNewShade(toHalfWidth(e.target.value)),
-    onKeyDown: e => e.key === "Enter" && addShade()
-  }), /*#__PURE__*/React.createElement("button", {
+    onFocus: () => setShadeOpen(true),
+    onChange: e => {
+      setNewShade(toHalfWidth(e.target.value));
+      setShadeOpen(true);
+    },
+    onKeyDown: e => e.key === "Enter" && addShade(),
+    onBlur: () => setTimeout(() => setShadeOpen(false), 150)
+  }), shadeOpen && shadeMatches.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      top: "100%",
+      left: 0,
+      right: 0,
+      zIndex: 50,
+      maxHeight: 160,
+      overflowY: "auto",
+      background: "#fff",
+      border: "1px solid #d0c4a8",
+      borderRadius: 8,
+      marginTop: 2,
+      boxShadow: "0 4px 10px rgba(0,0,0,0.15)"
+    }
+  }, shadeMatches.slice(0, 30).map(({
+    code,
+    name
+  }) => /*#__PURE__*/React.createElement("div", {
+    key: code,
+    onMouseDown: () => addShade(code),
+    style: {
+      padding: "7px 10px",
+      fontSize: 12,
+      cursor: "pointer",
+      color: "#2c2416",
+      borderBottom: "1px solid rgba(0,0,0,0.05)"
+    }
+  }, code, name && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: "#8a7058",
+      marginLeft: 6
+    }
+  }, name))))), /*#__PURE__*/React.createElement("button", {
     style: s2.sm,
-    onClick: addShade
+    onClick: () => addShade()
   }, "\u8FFD\u52A0"))))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: "12px 20px",
@@ -5972,6 +6040,7 @@ function App() {
     onClose: () => setShowSettings(false)
   }), showCategorySettings && /*#__PURE__*/React.createElement(CategorySettings, {
     categories: shadeCategories,
+    brands: brands,
     onSave: c => {
       saveCategories(c);
     },

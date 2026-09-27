@@ -350,7 +350,7 @@ const { useState, useMemo, useCallback, useEffect, useRef, useReducer } = React;
 const COLOR_CATEGORIES = [{
   id: "brown",
   label: "ブラウン・ベージュ系",
-  emoji: "🤎",
+  emoji: "🌰",
   color: "#b8895a",
   grad: "linear-gradient(135deg,#b8895a,#8a6030)",
   desc: "ナチュラルなブラウン・ベージュ・グレージュ",
@@ -359,25 +359,34 @@ const COLOR_CATEGORIES = [{
 }, {
   id: "ash",
   label: "アッシュ・グレー系",
-  emoji: "🩶",
+  emoji: "💎",
   color: "#7090a8",
   grad: "linear-gradient(135deg,#7090a8,#405870)",
   desc: "透明感のある寒色系アッシュ・グレー",
   type: "shade",
-  shades: ["A5", "A7", "A9", "A11", "WA9", "WA11", "MT5", "MT7", "MT9", "MT11", "Pe9", "Pe11", "DC-PearlGray", "PR-A", "YY-Ash", "YY-SilverGrey"]
+  shades: ["A5", "A7", "A9", "A11", "WA9", "WA11", "MT5", "MT7", "MT9", "MT11", "Pe9", "Pe11", "PR-A", "NV3", "NV7", "NV9", "YY-Blue", "DC-Cobalt"]
 }, {
   id: "pink",
-  label: "ピンク・レッド・バイオレット系",
-  emoji: "💜",
+  label: "ピンク・バイオレット系",
+  emoji: "🩷",
   color: "#953d78",
   grad: "linear-gradient(135deg,#c060a0,#8030c0)",
-  desc: "ピンク・ローズ・レッド・バイオレット系",
+  desc: "ピンク・ローズ・バイオレット系",
   type: "shade",
-  shades: ["P7", "P9", "P11", "FP7", "FP9", "FP11", "R5", "R7", "R9", "V5", "V7", "V9", "V11", "WV9", "WV11", "NV5", "NV7", "NV9", "PR-P", "PR-FP", "PR-R", "PR-V", "DC-Magenta", "DC-Cobalt", "YY-Pink", "YY-Magenta", "YY-Red", "YY-Violet", "YY-Blue", "YY-WhiteViolet", "YY-BlueViolet", "YY-RosePink", "YY-CoralPink"]
+  shades: ["P7", "P9", "P11", "FP7", "FP9", "FP11", "V5", "V7", "V9", "V11", "WV9", "WV11", "NV5", "NV7", "NV9", "PR-P", "PR-FP", "PR-V", "DC-Magenta", "DC-Cobalt", "YY-Pink", "YY-Violet", "YY-Blue"]
+}, {
+  id: "red",
+  label: "レッド系",
+  emoji: "🍎",
+  color: "#c03030",
+  grad: "linear-gradient(135deg,#d0605a,#901820)",
+  desc: "レッド・ローズレッド系",
+  type: "shade",
+  shades: ["R5", "R7", "R9", "PR-R", "YY-Red"]
 }, {
   id: "orange",
   label: "オレンジ・イエロー・ゴールド系",
-  emoji: "🧡",
+  emoji: "🍊",
   color: "#d08030",
   grad: "linear-gradient(135deg,#d08030,#c05010)",
   desc: "オレンジ・アプリコット・ゴールド系",
@@ -391,7 +400,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#7a9060,#506040)",
   desc: "マット・グリーン・オリーブ・アースカラー系",
   type: "shade",
-  shades: ["M5", "M7", "M9", "M11", "PR-M", "LT", "LT-EX", "CLR-PX", "YY-Clear"]
+  shades: ["M5", "M7", "M9", "M11", "PR-M"]
 }, {
   id: "nobleach",
   label: "ブリーチなし",
@@ -449,7 +458,7 @@ const DEFAULT_BRANDS = [{
   sublabel: "ファッションカラー／ルベル",
   accent: "#8a6520",
   type: "color",
-  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "Pe9", "Pe11", "WB5", "WB7", "WB9", "WB11", "MT5", "MT7", "MT9", "MT11", "IV5", "IV7", "IV9", "IV11", "A5", "A7", "A9", "A11", "M5", "M7", "M9", "M11", "V5", "V7", "V9", "V11", "P7", "P9", "P11", "R5", "R7", "R9", "O7", "O9", "O11", "NV5", "NV7", "NV9", "WV9", "WV11", "WA9", "WA11", "FP7", "FP9", "FP11", "PR-R", "PR-O", "PR-M", "PR-A", "PR-V", "PR-P", "PR-FP", "DC-Magenta", "DC-Cobalt", "DC-PearlGray", "DC-SandBeige", "LT", "LT-EX", "CLR-PX"],
+  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "Pe9", "Pe11", "WB5", "WB7", "WB9", "WB11", "MT5", "MT7", "MT9", "MT11", "IV5", "IV7", "IV9", "IV11", "A5", "A7", "A9", "A11", "M5", "M7", "M9", "M11", "V5", "V7", "V9", "V11", "P7", "P9", "P11", "R5", "R7", "R9", "O7", "O9", "O11", "NV3", "NV5", "NV7", "NV9", "WV9", "WV11", "WA9", "WA11", "FP7", "FP9", "FP11", "PR-R", "PR-O", "PR-M", "PR-A", "PR-V", "PR-P", "PR-FP", "DC-Magenta", "DC-Cobalt", "DC-PearlGray", "DC-SandBeige", "LT", "LT-EX", "CLR-PX"],
   shadeNames: {},
   shadeColors: {}
 }, {
@@ -458,7 +467,7 @@ const DEFAULT_BRANDS = [{
   sublabel: "塩基性カラー ／ ブリーチ毛専用",
   accent: "#a8386a",
   type: "color",
-  shades: ["YY-Ash", "YY-Violet", "YY-Blue", "YY-Pink", "YY-Magenta", "YY-Red", "YY-Orange", "YY-WhiteViolet", "YY-SilverGrey", "YY-BlueViolet", "YY-RosePink", "YY-CoralPink", "YY-Clear"],
+  shades: ["YY-Blue", "YY-Clear", "YY-Pink", "YY-Red", "YY-Violet"],
   shadeNames: {},
   shadeColors: {}
 }];
@@ -2627,11 +2636,10 @@ const Tag = ({
 
 // ===== グラム計算シート（比率→グラム変換）=====
 // colors: [{shade, brand, ratio, ...}]
-function GramCalculator({
+function GramCalcGroups({
   colors,
   developerBySection,
-  brands,
-  onClose
+  brands
 }) {
   const brandLabel = id => (brands || []).find(b => b.id === id)?.label || id;
   const groups = groupColorsBySection(colors);
@@ -2641,58 +2649,7 @@ function GramCalculator({
     ...t,
     [key]: val
   }));
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "fixed",
-      inset: 0,
-      zIndex: 300,
-      background: "rgba(60,45,20,0.45)",
-      display: "flex",
-      alignItems: "flex-end",
-      justifyContent: "center"
-    },
-    onClick: onClose
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: "100%",
-      maxWidth: 600,
-      maxHeight: "88vh",
-      overflowY: "auto",
-      background: "#f0ebe0",
-      borderRadius: "18px 18px 0 0",
-      padding: "22px 20px 44px",
-      borderTop: "1px solid rgba(201,168,76,0.5)"
-    },
-    onClick: e => e.stopPropagation()
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "flex-start",
-      marginBottom: 16
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: "'Cormorant Garamond',serif",
-      fontSize: 20,
-      color: "#2c2416"
-    }
-  }, "\u30B0\u30E9\u30E0\u8A08\u7B97"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontSize: 11,
-      color: "#5a4228",
-      marginTop: 2
-    }
-  }, "\u5206\u985E\uFF08\u90E8\u4F4D\uFF09\u3054\u3068\u306B\u6BD4\u7387\u3092\u7DAD\u6301\u3057\u3066\u5FC5\u8981\u91CF\u3092\u8A08\u7B97")), /*#__PURE__*/React.createElement("button", {
-    onClick: onClose,
-    style: {
-      background: "none",
-      border: "none",
-      color: "#5a4228",
-      fontSize: 20,
-      cursor: "pointer"
-    }
-  }, "\u2715")), groups.length === 0 ? /*#__PURE__*/React.createElement("div", {
+  return groups.length === 0 ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
       color: "#8a7058",
@@ -2877,7 +2834,280 @@ function GramCalculator({
         color: "#8a6520"
       }
     }, actualTotal, " g"))));
+  });
+}
+
+function GramCalculator({
+  colors,
+  developerBySection,
+  brands,
+  onClose
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      inset: 0,
+      zIndex: 300,
+      background: "rgba(60,45,20,0.45)",
+      display: "flex",
+      alignItems: "flex-end",
+      justifyContent: "center"
+    },
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: "100%",
+      maxWidth: 600,
+      maxHeight: "88vh",
+      overflowY: "auto",
+      background: "#f0ebe0",
+      borderRadius: "18px 18px 0 0",
+      padding: "22px 20px 44px",
+      borderTop: "1px solid rgba(201,168,76,0.5)"
+    },
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "'Cormorant Garamond',serif",
+      fontSize: 20,
+      color: "#2c2416"
+    }
+  }, "\u30B0\u30E9\u30E0\u8A08\u7B97"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#5a4228",
+      marginTop: 2
+    }
+  }, "\u5206\u985E\uFF08\u90E8\u4F4D\uFF09\u3054\u3068\u306B\u6BD4\u7387\u3092\u7DAD\u6301\u3057\u3066\u5FC5\u8981\u91CF\u3092\u8A08\u7B97")), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    style: {
+      background: "none",
+      border: "none",
+      color: "#5a4228",
+      fontSize: 20,
+      cursor: "pointer"
+    }
+  }, "\u2715")), /*#__PURE__*/React.createElement(GramCalcGroups, {
+    colors: colors,
+    developerBySection: developerBySection,
+    brands: brands
   })));
+}
+
+// ===== グラム計算（フッターから独立して使えるページ） =====
+function GramCalcPage({ recipes, brands }) {
+  const [mode, setMode] = useState('manual');
+  const selectedRecipe = mode !== 'manual' ? (recipes || []).find(r => String(r.id) === mode) : null;
+
+  const [manualRows, setManualRows] = useState([
+    { id: 1, label: '1剤', ratio: 1 },
+    { id: 2, label: '2剤', ratio: 1 }
+  ]);
+  const [manualTotal, setManualTotal] = useState(60);
+  const nextIdRef = useRef(3);
+
+  const updateRow = (id, patch) => setManualRows(rows => rows.map(r => r.id === id ? { ...r, ...patch } : r));
+  const addRow = () => setManualRows(rows => [...rows, { id: nextIdRef.current++, label: `${rows.length + 1}剤`, ratio: 1 }]);
+  const removeRow = id => setManualRows(rows => rows.length > 1 ? rows.filter(r => r.id !== id) : rows);
+
+  const ratioSum = manualRows.reduce((sum, r) => sum + (+r.ratio || 0), 0);
+  const manualGrams = manualRows.map(r => ratioSum > 0 ? Math.round((+r.ratio || 0) / ratioSum * manualTotal) : 0);
+  const manualActualTotal = manualGrams.reduce((sum, g) => sum + g, 0);
+
+  const labelStyle = {
+    fontSize: 9,
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    color: "#8a6520",
+    display: "block",
+    marginBottom: 8
+  };
+  const inputStyle = {
+    padding: "8px 10px",
+    background: "#fff",
+    border: "1px solid #c8b890",
+    borderRadius: 7,
+    fontSize: 13,
+    color: "#2c2416",
+    outline: "none",
+    fontFamily: "var(--font-jp)"
+  };
+  const cardStyle = {
+    width: "100%",
+    padding: "16px 18px",
+    background: "#fff",
+    border: "1px solid #d4c9b0",
+    borderRadius: 12
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    style: { padding: "16px 16px 90px", maxWidth: 600, margin: "0 auto" }
+  },
+    /*#__PURE__*/React.createElement("div", {
+      style: { fontFamily: "'Cormorant Garamond',serif", fontSize: 20, color: "#2c2416", marginBottom: 4, letterSpacing: "0.05em" }
+    }, "グラム計算"),
+    /*#__PURE__*/React.createElement("div", {
+      style: { fontSize: 11, color: "#8a7058", marginBottom: 16 }
+    }, "比率をもとに、必要な分量をグラムで計算します"),
+    /*#__PURE__*/React.createElement("div", { style: { marginBottom: 18 } },
+      /*#__PURE__*/React.createElement("label", { style: labelStyle }, "計算方法"),
+      /*#__PURE__*/React.createElement("select", {
+        value: mode,
+        onChange: e => setMode(e.target.value),
+        style: { ...inputStyle, width: "100%", cursor: "pointer" }
+      },
+        /*#__PURE__*/React.createElement("option", { value: "manual" }, "手動で比率を入力"),
+        (recipes || []).length > 0 && /*#__PURE__*/React.createElement("optgroup", { label: "保存済みレシピから計算" },
+          recipes.map(r => /*#__PURE__*/React.createElement("option", { key: r.id, value: r.id }, r.name))
+        )
+      )
+    ),
+    selectedRecipe ? /*#__PURE__*/React.createElement("div", {
+      style: cardStyle
+    }, /*#__PURE__*/React.createElement(GramCalcGroups, {
+      colors: selectedRecipe.colors,
+      developerBySection: selectedRecipe.developerBySection,
+      brands: brands
+    })) : /*#__PURE__*/React.createElement("div", {
+      style: cardStyle
+    },
+      /*#__PURE__*/React.createElement("div", {
+        style: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }
+      },
+        /*#__PURE__*/React.createElement("span", {
+          style: { fontSize: 12, fontWeight: 500, color: "#7a5818", fontFamily: "var(--font-jp)" }
+        }, "総量"),
+        /*#__PURE__*/React.createElement("div", {
+          style: { display: "flex", alignItems: "baseline", gap: 2 }
+        },
+          /*#__PURE__*/React.createElement("input", {
+            type: "number",
+            min: 1,
+            max: 999,
+            value: manualTotal,
+            onChange: e => setManualTotal(+e.target.value || 0),
+            style: {
+              width: 64,
+              padding: "3px 6px",
+              textAlign: "right",
+              fontSize: 15,
+              fontFamily: "var(--font-jp)",
+              color: "#8a6520",
+              background: "rgba(138,101,32,0.06)",
+              border: "1px solid rgba(138,101,32,0.4)",
+              borderRadius: 6,
+              outline: "none"
+            }
+          }),
+          /*#__PURE__*/React.createElement("span", { style: { fontSize: 11, color: "#5a4228" } }, "g")
+        )
+      ),
+      /*#__PURE__*/React.createElement("div", {
+        style: { background: "#f7f3ec", borderRadius: 12, border: "1px solid #d0c4a8", overflow: "hidden", marginBottom: 12 }
+      }, manualRows.map((row, i) => /*#__PURE__*/React.createElement("div", {
+        key: row.id,
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "10px 12px",
+          borderBottom: i < manualRows.length - 1 ? "1px solid #ddd4be" : "none"
+        }
+      },
+        /*#__PURE__*/React.createElement("input", {
+          type: "text",
+          value: row.label,
+          onChange: e => updateRow(row.id, { label: e.target.value }),
+          placeholder: "名称",
+          style: {
+            flex: 1,
+            minWidth: 0,
+            padding: "6px 8px",
+            fontSize: 13,
+            fontFamily: "var(--font-jp)",
+            color: "#2c2416",
+            background: "#fff",
+            border: "1px solid #d4c9b0",
+            borderRadius: 6,
+            outline: "none"
+          }
+        }),
+        /*#__PURE__*/React.createElement("input", {
+          type: "number",
+          min: 0,
+          step: "any",
+          value: row.ratio,
+          onChange: e => updateRow(row.id, { ratio: e.target.value }),
+          style: {
+            width: 52,
+            padding: "6px 4px",
+            textAlign: "center",
+            fontSize: 13,
+            fontFamily: "var(--font-jp)",
+            color: "#2c2416",
+            background: "#fff",
+            border: "1px solid #d4c9b0",
+            borderRadius: 6,
+            outline: "none"
+          }
+        }),
+        /*#__PURE__*/React.createElement("div", {
+          style: { display: "flex", alignItems: "baseline", gap: 2, width: 56, justifyContent: "flex-end" }
+        },
+          /*#__PURE__*/React.createElement("span", {
+            style: { fontFamily: "'Cormorant Garamond',serif", fontSize: 20, color: "#8a6520", lineHeight: 1 }
+          }, manualGrams[i] || 0),
+          /*#__PURE__*/React.createElement("span", { style: { fontSize: 11, color: "#6a5030" } }, "g")
+        ),
+        /*#__PURE__*/React.createElement("button", {
+          type: "button",
+          onClick: () => removeRow(row.id),
+          disabled: manualRows.length <= 1,
+          style: {
+            background: "none",
+            border: "none",
+            color: manualRows.length <= 1 ? "#c9bda0" : "#b0846a",
+            fontSize: 16,
+            cursor: manualRows.length <= 1 ? "default" : "pointer",
+            padding: "0 2px"
+          }
+        }, "✕")
+      ))),
+      /*#__PURE__*/React.createElement("button", {
+        type: "button",
+        onClick: addRow,
+        style: {
+          width: "100%",
+          padding: "9px",
+          borderRadius: 8,
+          border: "1px dashed #b8a070",
+          background: "none",
+          color: "#8a6520",
+          fontSize: 12,
+          fontFamily: "var(--font-jp)",
+          cursor: "pointer",
+          marginBottom: 12
+        }
+      }, "+ 行を追加"),
+      /*#__PURE__*/React.createElement("div", {
+        style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 14px", background: "rgba(138,101,32,0.07)", borderRadius: 8 }
+      },
+        /*#__PURE__*/React.createElement("span", {
+          style: { fontSize: 11, color: "#7a5818" }
+        }, "合計", manualActualTotal !== manualTotal ? ` (指定 ${manualTotal}g)` : ""),
+        /*#__PURE__*/React.createElement("span", {
+          style: { fontFamily: "var(--font-jp)", fontSize: 16, color: "#8a6520" }
+        }, manualActualTotal, " g")
+      )
+    )
+  );
 }
 
 // ===== ブランド設定画面 =====
@@ -5693,10 +5923,6 @@ function App() {
     label: t
   }))))));
   const tabs = [{
-    id: "new",
-    label: "新規",
-    icon: "➕"
-  }, {
     id: "list",
     label: "レシピ",
     icon: "📋"
@@ -5709,11 +5935,15 @@ function App() {
     label: "ポイント",
     icon: "💡"
   }, {
+    id: "gramcalc",
+    label: "g計算",
+    icon: "⚖️"
+  }, {
     id: "settings",
     label: "設定",
     icon: "⚙️"
   }];
-  const activeTab = view === "form" ? (form && recipes.find(r => r.id === form.id) ? "list" : "new") : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["data", "settings", "font"].includes(view) ? "settings" : "list";
+  const activeTab = view === "form" ? "list" : ["list", "detail"].includes(view) ? "list" : ["category", "catDetail"].includes(view) ? "category" : ["tips"].includes(view) ? "tips" : ["gramcalc"].includes(view) ? "gramcalc" : ["data", "settings", "font"].includes(view) ? "settings" : "list";
   const currentFontValue = (FONT_OPTIONS.find(f => f.id === fontSettings.family) || FONT_OPTIONS[0]).value;
   const isBoldFont = fontSettings.weight >= 700;
   return /*#__PURE__*/React.createElement("div", {
@@ -5817,75 +6047,7 @@ function App() {
       maxWidth: 600,
       margin: "0 auto"
     }
-  }, view === "list" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      gap: 6,
-      marginBottom: 16
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setFilterCat(""),
-    style: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 4,
-      padding: "7px 6px",
-      borderRadius: 10,
-      cursor: "pointer",
-      border: "none",
-      background: filterCat === "" ? "rgba(201,168,76,0.65)" : "rgba(255,255,255,0.04)",
-      outline: `1px solid ${filterCat === "" ? "rgba(201,168,76,0.75)" : "rgba(255,255,255,0.09)"}`,
-      color: filterCat === "" ? "#8a6520" : "rgba(232,221,208,0.65)",
-      fontSize: 11,
-      fontFamily: "var(--font-jp)"
-    }
-  }, "\u3059\u3079\u3066"), categories.map(cat => /*#__PURE__*/React.createElement("button", {
-    key: cat.id,
-    onClick: () => setFilterCat(filterCat === cat.id ? "" : cat.id),
-    style: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: 2,
-      padding: "8px 4px 7px",
-      borderRadius: 10,
-      cursor: "pointer",
-      border: "none",
-      background: filterCat === cat.id ? `${cat.color}22` : "rgba(255,255,255,0.04)",
-      outline: `1px solid ${filterCat === cat.id ? cat.color + "65" : "rgba(255,255,255,0.09)"}`,
-      color: filterCat === cat.id ? cat.color : "#6a5030",
-      fontFamily: "var(--font-jp)",
-      position: "relative",
-      overflow: "hidden"
-    }
-  }, filterCat === cat.id && /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      height: 2,
-      background: cat.grad
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 16
-    }
-  }, cat.emoji), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 10,
-      lineHeight: 1.3,
-      textAlign: "center"
-    }
-  }, cat.label), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 9,
-      opacity: .55
-    }
-  }, "(", catCounts[cat.id] || 0, ")")))), filteredByCat.length === 0 && /*#__PURE__*/React.createElement("div", {
+  }, view === "list" && /*#__PURE__*/React.createElement(React.Fragment, null, filteredByCat.length === 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: "center",
       padding: "60px 0",
@@ -6761,7 +6923,39 @@ function App() {
     onClick: () => {
       if (selCat && catRecipes.find(r => r.id === selId)) setView("catDetail");else setView("list");
     }
-  }, "\u2190 \u623B\u308B")), view === "form" && form && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+  }, "\u2190 \u623B\u308B"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      background: "rgba(247,243,236,0.97)",
+      borderTop: "1px solid rgba(201,168,76,0.65)",
+      backdropFilter: "blur(12px)",
+      zIndex: 200,
+      padding: "10px 16px calc(10px + env(safe-area-inset-bottom))"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    style: {
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 6,
+      padding: "10px 0",
+      borderRadius: 10,
+      border: "1px solid rgba(138,101,32,0.25)",
+      background: "#fff",
+      color: "#6a5030",
+      fontSize: 13,
+      fontFamily: "var(--font-jp)",
+      letterSpacing: "0.05em",
+      cursor: "pointer"
+    },
+    onClick: () => {
+      if (selCat && catRecipes.find(r => r.id === selId)) setView("catDetail");else setView("list");
+    }
+  }, "\u2190 \u623B\u308B"))), view === "form" && form && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
     style: s.back,
     onClick: () => {
       setView(selId ? "detail" : "list");
@@ -7745,7 +7939,10 @@ function App() {
       marginBottom: 0
     },
     onClick: save
-  }, "\u4FDD\u5B58\u3059\u308B"))), view === "tips" && /*#__PURE__*/React.createElement(TipsView, null), view === "data" && /*#__PURE__*/React.createElement(DataManagementView, {
+  }, "\u4FDD\u5B58\u3059\u308B"))), view === "tips" && /*#__PURE__*/React.createElement(TipsView, null), view === "gramcalc" && /*#__PURE__*/React.createElement(GramCalcPage, {
+    recipes: recipes,
+    brands: brands
+  }), view === "data" && /*#__PURE__*/React.createElement(DataManagementView, {
     onRecipesImported: r => setRecipes(r),
     onBrandsImported: b => setBrands(b),
     onCategoriesImported: c => setShadeCategories(c)
@@ -7761,6 +7958,34 @@ function App() {
       color: "#2c2416"
     }
   }, "\u8A2D\u5B9A"), /*#__PURE__*/React.createElement("button", {
+    onClick: openNew,
+    style: {
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      padding: "16px 18px",
+      background: "#8a6520",
+      border: "1px solid #8a6520",
+      borderRadius: 12,
+      cursor: "pointer",
+      fontFamily: "var(--font-jp)",
+      textAlign: "left",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 18,
+      color: "#fff",
+      lineHeight: 1
+    }
+  }, "\u2795"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      color: "#fff",
+      fontWeight: 500
+    }
+  }, "\u65B0\u898F\u30EC\u30B7\u30D4\u3092\u8FFD\u52A0")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setShowSettings(true),
     style: {
       width: "100%",
@@ -8027,7 +8252,7 @@ function App() {
         }, sc.label);
       }))
     )
-  )), (view === "list" || view === "category" || view === "tips" || view === "data" || view === "settings" || view === "font") && /*#__PURE__*/React.createElement("div", {
+  )), (view === "list" || view === "category" || view === "tips" || view === "gramcalc" || view === "data" || view === "settings" || view === "font") && /*#__PURE__*/React.createElement("div", {
     style: {
       position: "fixed",
       bottom: 0,
@@ -8041,7 +8266,7 @@ function App() {
     }
   }, tabs.map(tab => /*#__PURE__*/React.createElement("button", {
     key: tab.id,
-    onClick: () => tab.id === "new" ? openNew() : setView(tab.id),
+    onClick: () => setView(tab.id),
     style: {
       flex: 1,
       padding: "12px 0 10px",

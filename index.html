@@ -355,7 +355,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#b8895a,#8a6030)",
   desc: "ナチュラルなブラウン・ベージュ・グレージュ",
   type: "shade",
-  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "WB5", "WB7", "WB9", "WB11", "IV5", "IV7", "IV9", "IV11", "DC-SandBeige"]
+  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "WB5", "WB7", "WB9", "WB11", "IV5", "IV7", "IV9", "IV11", "DC-SandBeige", "Be13"]
 }, {
   id: "ash",
   label: "アッシュ・グレー系",
@@ -364,7 +364,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#7090a8,#405870)",
   desc: "透明感のある寒色系アッシュ・グレー",
   type: "shade",
-  shades: ["A5", "A7", "A9", "A11", "WA9", "WA11", "MT5", "MT7", "MT9", "MT11", "Pe9", "Pe11", "PR-A", "NV3", "NV7", "NV9", "YY-Blue", "DC-Cobalt"]
+  shades: ["A5", "A7", "A9", "A11", "WA9", "WA11", "MT5", "MT7", "MT9", "MT11", "Pe9", "Pe11", "PR-A", "NV3", "NV7", "NV9", "YY-Blue", "DC-Cobalt", "A13", "WA13"]
 }, {
   id: "pink",
   label: "ピンク・バイオレット系",
@@ -373,7 +373,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#c060a0,#8030c0)",
   desc: "ピンク・ローズ・バイオレット系",
   type: "shade",
-  shades: ["P7", "P9", "P11", "FP7", "FP9", "FP11", "V5", "V7", "V9", "V11", "WV9", "WV11", "NV5", "NV7", "NV9", "PR-P", "PR-FP", "PR-V", "DC-Magenta", "DC-Cobalt", "YY-Pink", "YY-Violet", "YY-Blue"]
+  shades: ["P7", "P9", "P11", "FP7", "FP9", "FP11", "V5", "V7", "V9", "V11", "WV9", "WV11", "PR-P", "PR-FP", "PR-V", "DC-Magenta", "YY-Pink", "YY-Violet", "WV13"]
 }, {
   id: "red",
   label: "レッド系",
@@ -431,7 +431,7 @@ const COLOR_CATEGORIES = [{
 }];
 // COLOR_CATEGORIES / DEFAULT_BRANDS の内容を更新するたびにこの数値を上げると、
 // 既にlocalStorageに保存済みのユーザーにも最新のデフォルト内容（絵文字・色番号一覧など）が反映される
-const DATA_SEED_VERSION = 2;
+const DATA_SEED_VERSION = 5;
 function getRecipeCategories(recipe, categories) {
   const shadeMap = {};
   categories.filter(c => c.type === "shade").forEach(cat => cat.shades.forEach(sh => {
@@ -455,25 +455,38 @@ function getCatRecipes(catId, recipes, categories) {
 }
 
 // ===== デフォルトブランドデータ（編集可能）=====
-const DEFAULT_BRANDS = [{
+const DEFAULT_BRANDS = [
+{
   id: "edol",
   label: "edol",
   sublabel: "ファッションカラー／ルベル",
   accent: "#8a6520",
   type: "color",
-  shades: ["B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Gr5", "Gr7", "Gr9", "Gr11", "Pe9", "Pe11", "WB5", "WB7", "WB9", "WB11", "MT5", "MT7", "MT9", "MT11", "IV5", "IV7", "IV9", "IV11", "A5", "A7", "A9", "A11", "M5", "M7", "M9", "M11", "V5", "V7", "V9", "V11", "P7", "P9", "P11", "R5", "R7", "R9", "O7", "O9", "O11", "NV3", "NV5", "NV7", "NV9", "WV9", "WV11", "WA9", "WA11", "FP7", "FP9", "FP11", "PR-R", "PR-O", "PR-M", "PR-A", "PR-V", "PR-P", "PR-FP", "DC-Magenta", "DC-Cobalt", "DC-PearlGray", "DC-SandBeige", "LT", "LT-EX", "CLR-PX"],
-  shadeNames: {},
-  shadeColors: {}
-}, {
+  shades: ["A5", "A7", "A9", "A11", "A13", "B5", "B7", "B9", "B11", "Be5", "Be7", "Be9", "Be11", "Be13", "CLR-PX", "DC-Cobalt", "DC-Magenta", "DC-PearlGray", "DC-SandBeige", "FP7", "FP9", "FP11", "Gr5", "Gr7", "Gr9", "Gr11", "IV5", "IV7", "IV9", "IV11", "LT", "LT-EX", "M5", "M7", "M9", "M11", "M13", "MT5", "MT7", "MT9", "MT11", "NV3", "NV5", "NV7", "NV9", "O7", "O9", "O11", "P7", "P9", "P11", "Pe9", "Pe11", "PR-A", "PR-M", "PR-O", "PR-P", "PR-R", "PR-V", "PR-Y", "R5", "R7", "R9", "R11", "V5", "V7", "V9", "V11", "WA9", "WA11", "WA13", "WB5", "WB7", "WB9", "WB11", "WV9", "WV11", "WV13"],
+  shadeNames: {"A5": "アッシュ", "A7": "アッシュ", "A9": "アッシュ", "A11": "アッシュ", "A13": "アッシュ", "B5": "ブラウン", "B7": "ブラウン", "B9": "ブラウン", "B11": "ブラウン", "Be5": "ベージュ", "Be7": "ベージュ", "Be9": "ベージュ", "Be11": "ベージュ", "Be13": "ベージュ", "CLR-PX": "クリア", "DC-Cobalt": "コバルト", "DC-Magenta": "マゼンタ", "DC-PearlGray": "パールグレー", "DC-SandBeige": "サンドベージュ", "FP7": "フューシャピンク", "FP9": "フューシャピンク", "FP11": "フューシャピンク", "Gr5": "グレージュ", "Gr7": "グレージュ", "Gr9": "グレージュ", "Gr11": "グレージュ", "IV5": "アイボリー", "IV7": "アイボリー", "IV9": "アイボリー", "IV11": "アイボリー", "LT": "ライトナー", "LT-EX": "ライトナー", "M5": "マット", "M7": "マット", "M9": "マット", "M11": "マット", "M13": "マット", "MT5": "モノトーン", "MT7": "モノトーン", "MT9": "モノトーン", "MT11": "モノトーン", "NV3": "ネイビー", "NV5": "ネイビー", "NV7": "ネイビー", "NV9": "ネイビー", "O7": "オレンジ", "O9": "オレンジ", "O11": "オレンジ", "P7": "ピンク", "P9": "ピンク", "P11": "ピンク", "Pe9": "パール", "Pe11": "パール", "PR-A": "アッシュ", "PR-M": "マット", "PR-O": "オレンジ", "PR-P": "ピンク", "PR-R": "レッド", "PR-V": "バイオレット", "PR-Y": "イエロー", "R5": "レッド", "R7": "レッド", "R9": "レッド", "R11": "レッド", "V5": "バイオレット", "V7": "バイオレット", "V9": "バイオレット", "V11": "バイオレット", "WA9": "ホワイトアッシュ", "WA11": "ホワイトアッシュ", "WA13": "ホワイトアッシュ", "WB5": "ウォームブラウン", "WB7": "ウォームブラウン", "WB9": "ウォームブラウン", "WB11": "ウォームブラウン", "WV9": "ホワイトバイオレット", "WV11": "ホワイトバイオレット", "WV13": "ホワイトバイオレット"},
+  shadeColors: {"A7": "#3e6b98", "A9": "#3e6b98", "A11": "#3e6b98", "A13": "#3e6b98", "B7": "#98683e", "B9": "#98683e", "B11": "#98683e", "Be5": "#d2aa83", "Be7": "#d2aa83", "Be9": "#d2aa83", "Be11": "#d2aa83", "Be13": "#d2aa83", "CLR-PX": "#ffffff", "DC-PearlGray": "#d8c8da", "FP9": "#bb589a", "FP11": "#bb589a", "Gr7": "#888", "Gr9": "#888", "Gr11": "#888", "IV5": "#f2ebd4", "IV7": "#f2ebd4", "IV9": "#f2ebd4", "IV11": "#f2ebd4", "LT": "#ffffff", "LT-EX": "#ffffff", "M7": "#5c983e", "M9": "#5c983e", "M11": "#5c983e", "M13": "#5c983e", "MT5": "#666666", "MT7": "#666666", "MT9": "#666666", "MT11": "#666666", "NV3": "#445169", "NV5": "#445169", "NV7": "#445169", "NV9": "#445169", "O7": "#ff8b38", "O9": "#ff8b38", "O11": "#ff8b38", "P9": "#e26f95", "P11": "#e26f95", "P7": "#e26f95", "Pe9": "#f1e2fd", "Pe11": "#f1e2fd", "PR-Y": "#ffea05", "R5": "#ff0000", "R7": "#ff0000", "R9": "#ff0000", "R11": "#ff0000", "V7": "#6b3e98", "V9": "#6b3e98", "V11": "#6b3e98", "WA9": "#c0d1e3", "WA11": "#c0d1e3", "WA13": "#c0d1e3", "WB5": "#ac4d15", "WB7": "#ac4d15", "WB9": "#ac4d15", "WB11": "#ac4d15", "WV11": "#d8cae2", "WV9": "#d8cae2", "WV13": "#d8cae2"}
+},
+{
   id: "edol yoyo",
   label: "edol yoyo",
   sublabel: "塩基性カラー ／ ブリーチ毛専用",
   accent: "#a8386a",
   type: "color",
   shades: ["YY-Blue", "YY-Clear", "YY-Pink", "YY-Red", "YY-Violet"],
-  shadeNames: {},
+  shadeNames: {"YY-Blue": "ヨヨ・ブルー", "YY-Clear": "ヨヨ・クリア", "YY-Pink": "ヨヨ・ピンク", "YY-Red": "ヨヨ・レッド", "YY-Violet": "ヨヨ・バイオレット"},
   shadeColors: {}
-}];
+},
+{
+  id: "brand_1786943670853",
+  label: "caradeco",
+  sublabel: "NAKANO",
+  accent: "#fda5e6",
+  type: "color",
+  shades: ["BP/m7", "BP/m9"],
+  shadeNames: {"BP/m9": "ベビーピンク", "BP/m7": "ベビーピンク"},
+  shadeColors: {"BP/m9": "#fb9dea", "BP/m7": "#fb9dea"}
+}
+];
 const SHADE_HUE = {
   // ベースカラー
   B: 28,
@@ -5561,6 +5574,7 @@ function App() {
     setForm({
       id: Date.now(),
       name: "",
+      subName: "",
       clientName: "",
       date: new Date().toISOString().slice(0, 10),
       baseLevel: 7,
@@ -5870,7 +5884,15 @@ function App() {
       flex: 1,
       minWidth: 0
     }
-  }, /*#__PURE__*/React.createElement(MixedName, {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "#8a7058",
+      fontFamily: "var(--font-jp)",
+      letterSpacing: "0.02em",
+      marginBottom: 2
+    }
+  }, `Base ${levelLabel(r.baseLevel)} → Target ${levelLabel(r.targetLevel)}`), /*#__PURE__*/React.createElement(MixedName, {
     name: r.name,
     fontSize: 18,
     color: "#2c2416"
@@ -6540,7 +6562,14 @@ function App() {
       lineHeight: 1.2,
       display: "block"
     }
-  }), /*#__PURE__*/React.createElement("div", {
+  }), selected.subName && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: "#8a7058",
+      fontFamily: "var(--font-jp)",
+      marginTop: 2
+    }
+  }, selected.subName), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 4,
@@ -7118,6 +7147,20 @@ function App() {
     onChange: e => setForm(p => ({
       ...p,
       name: e.target.value
+    }))
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: s.lbl
+  }, "\u30B5\u30D6\u30EC\u30B7\u30D4\u540D"), /*#__PURE__*/React.createElement("input", {
+    style: s.inp,
+    placeholder: "\u4F8B\uFF1A\u30A4\u30F3\u30CA\u30FC\u30AB\u30E9\u30FC\u3001\u30EA\u30BF\u30C3\u30C1\u90E8\u5206\u306A\u3069\uFF08\u4EFB\u610F\uFF09",
+    value: form.subName || "",
+    onChange: e => setForm(p => ({
+      ...p,
+      subName: e.target.value
     }))
   })), /*#__PURE__*/React.createElement("div", {
     style: {

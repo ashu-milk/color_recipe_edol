@@ -409,7 +409,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#80a070,#507050)",
   desc: "ブリーチ工程なしのレシピ",
   type: "flag",
-  match: r => !r.bleach
+  match: r => r.bleachFlag ? r.bleachFlag === "no" : !r.bleach
 }, {
   id: "bleach",
   label: "ブリーチあり",
@@ -418,7 +418,7 @@ const COLOR_CATEGORIES = [{
   grad: "linear-gradient(135deg,#4a9fd4,#2060a0)",
   desc: "ブリーチ工程ありのレシピ",
   type: "flag",
-  match: r => !!r.bleach
+  match: r => r.bleachFlag ? r.bleachFlag === "yes" : !!r.bleach
 }, {
   id: "yoyo",
   label: "yoyo",
@@ -5580,6 +5580,7 @@ function App() {
       baseLevel: 7,
       targetLevel: 9,
       bleach: null,
+      bleachFlag: null,
       colors: [],
       developer: "6%",
       developerAmount: 60,
@@ -7209,6 +7210,56 @@ function App() {
       value: lv
     }, levelLabel(lv));
   }))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: s.lbl
+  }, "ブリーチ区分バッジ"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setForm(p => ({
+      ...p,
+      bleachFlag: p.bleachFlag === "no" ? null : "no"
+    })),
+    style: {
+      flex: 1,
+      padding: "8px",
+      borderRadius: 8,
+      cursor: "pointer",
+      border: `1px solid ${form.bleachFlag === "no" ? "rgba(128,160,112,0.6)" : "#c8b890"}`,
+      background: form.bleachFlag === "no" ? "rgba(128,160,112,0.15)" : "rgba(138,101,32,0.05)",
+      color: form.bleachFlag === "no" ? "#4a7040" : "#6a5030",
+      fontSize: 12,
+      fontFamily: "var(--font-jp)"
+    }
+  }, "🚫✂ ブリーチなし"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setForm(p => ({
+      ...p,
+      bleachFlag: p.bleachFlag === "yes" ? null : "yes"
+    })),
+    style: {
+      flex: 1,
+      padding: "8px",
+      borderRadius: 8,
+      cursor: "pointer",
+      border: `1px solid ${form.bleachFlag === "yes" ? "rgba(74,159,212,0.6)" : "#c8b890"}`,
+      background: form.bleachFlag === "yes" ? "rgba(74,159,212,0.15)" : "rgba(138,101,32,0.05)",
+      color: form.bleachFlag === "yes" ? "#2060a0" : "#6a5030",
+      fontSize: 12,
+      fontFamily: "var(--font-jp)"
+    }
+  }, "✂️ ブリーチあり")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 10,
+      color: "#9a8060",
+      marginTop: 6,
+      lineHeight: 1.5
+    }
+  }, "ブリーチ工程を入力しなくても、バッジで「ブリーチあり／なし」の色味グループに振り分けられます。未選択の場合は、下のブリーチ工程の入力有無で自動判定されます。")), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 12
     }

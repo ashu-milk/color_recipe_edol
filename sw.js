@@ -1,5 +1,5 @@
 // Couleur PWA Service Worker
-const CACHE_NAME = 'couleur-v5';
+const CACHE_NAME = 'couleur-v6';
 const URLS_TO_CACHE = [
   './',
   './index.html',

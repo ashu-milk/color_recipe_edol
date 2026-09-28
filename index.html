@@ -4762,6 +4762,8 @@ function DataManagementView({
     try { return JSON.parse(localStorage.getItem('couleur_recipes') || '[]'); } catch(e) { return []; }
   });
   const [exportMsg, setExportMsg] = React.useState(null);
+  const [brandsExportMsg, setBrandsExportMsg] = React.useState(null);
+  const [categoriesExportMsg, setCategoriesExportMsg] = React.useState(null);
   const [importMsg, setImportMsg] = React.useState(null);
   const storageUsedKB = React.useMemo(() => {
     try {
@@ -4775,28 +4777,20 @@ function DataManagementView({
   }, [recipes]);
   const storagePct = Math.min(100, Math.round(storageUsedKB / 5120 * 100));
 
-  const handleExport = async () => {
+  const exportJSON = async (data, filenamePrefix) => {
     try {
-      const allRecipes = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
-      let brandsData = null;
-      try { brandsData = JSON.parse(localStorage.getItem('couleur_brands') || 'null'); } catch(e) {}
-      let categoriesData = null;
-      try { categoriesData = JSON.parse(localStorage.getItem('couleur_categories') || 'null'); } catch(e) {}
-      const data = { version: 3, exportedAt: new Date().toISOString(), recipes: allRecipes, brands: brandsData, categories: categoriesData, tips: TIPS_DATA };
       const json = JSON.stringify(data, null, 2);
       const now = new Date();
       const ymd = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
-      const filename = 'couleur_backup_' + ymd + '.json';
+      const filename = filenamePrefix + '_' + ymd + '.json';
       try {
         const blob = new Blob([json], {type:'application/json'});
         const file = new File([blob], filename, {type:'application/json'});
         if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
           await navigator.share({files:[file], title:'Couleurバックアップ'});
-          setExportMsg('✅ ' + allRecipes.length + '件のレシピ・カラー剤マスタ・色味グループをエクスポートしました');
-          setTimeout(() => setExportMsg(null), 3000);
-          return;
+          return { ok: true };
         }
-      } catch(e) { if (e.name === 'AbortError') return; }
+      } catch(e) { if (e.name === 'AbortError') return { ok: null }; }
       try {
         const blob = new Blob([json], {type:'application/json'});
         const url = URL.createObjectURL(blob);
@@ -4804,17 +4798,47 @@ function DataManagementView({
         a.href = url; a.download = filename;
         document.body.appendChild(a); a.click();
         setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-        setExportMsg('✅ ' + allRecipes.length + '件のレシピ・カラー剤マスタ・色味グループをエクスポートしました');
-        setTimeout(() => setExportMsg(null), 3000);
-        return;
+        return { ok: true };
       } catch(e) {}
       await navigator.clipboard.writeText(json);
-      setExportMsg('📋 クリップボードにコピーしました（メモ帳等に貼り付けて保存）');
-      setTimeout(() => setExportMsg(null), 6000);
+      return { ok: true, clipboard: true };
     } catch(e) {
-      setExportMsg('❌ エクスポートに失敗しました');
-      setTimeout(() => setExportMsg(null), 3000);
+      return { ok: false };
     }
+  };
+
+  const runExport = async (data, filenamePrefix, successMsg, setMsg) => {
+    const result = await exportJSON(data, filenamePrefix);
+    if (result.ok === null) return; // ユーザーが共有をキャンセルした場合は何も表示しない
+    const msg = !result.ok ? '❌ エクスポートに失敗しました'
+      : result.clipboard ? '📋 クリップボードにコピーしました（メモ帳等に貼り付けて保存）'
+      : successMsg;
+    setMsg(msg);
+    setTimeout(() => setMsg(null), result.clipboard ? 6000 : 3000);
+  };
+
+  const handleExport = async () => {
+    const allRecipes = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
+    let brandsData = null;
+    try { brandsData = JSON.parse(localStorage.getItem('couleur_brands') || 'null'); } catch(e) {}
+    let categoriesData = null;
+    try { categoriesData = JSON.parse(localStorage.getItem('couleur_categories') || 'null'); } catch(e) {}
+    const data = { version: 3, exportedAt: new Date().toISOString(), recipes: allRecipes, brands: brandsData, categories: categoriesData, tips: TIPS_DATA };
+    await runExport(data, 'couleur_backup', '✅ ' + allRecipes.length + '件のレシピ・カラー剤マスタ・色味グループをエクスポートしました', setExportMsg);
+  };
+
+  const handleExportBrands = async () => {
+    let brandsData = [];
+    try { brandsData = JSON.parse(localStorage.getItem('couleur_brands') || 'null') || []; } catch(e) {}
+    const data = { version: 3, exportedAt: new Date().toISOString(), brands: brandsData };
+    await runExport(data, 'couleur_brands_backup', '✅ カラー剤マスタ（' + brandsData.length + '件）をエクスポートしました', setBrandsExportMsg);
+  };
+
+  const handleExportCategories = async () => {
+    let categoriesData = [];
+    try { categoriesData = JSON.parse(localStorage.getItem('couleur_categories') || 'null') || []; } catch(e) {}
+    const data = { version: 3, exportedAt: new Date().toISOString(), categories: categoriesData };
+    await runExport(data, 'couleur_categories_backup', '✅ 色味グループ（' + categoriesData.length + '件）をエクスポートしました', setCategoriesExportMsg);
   };
 
   const handleImport = (e) => {
@@ -4824,8 +4848,13 @@ function DataManagementView({
     reader.onload = (ev) => {
       try {
         const parsed = JSON.parse(ev.target.result);
-        const imported = Array.isArray(parsed) ? parsed : parsed.recipes;
-        if (!Array.isArray(imported)) throw new Error('不正なフォーマット');
+        const isPlainArray = Array.isArray(parsed);
+        const recipesIn = isPlainArray ? parsed : parsed.recipes;
+        const brandsIn = isPlainArray ? null : parsed.brands;
+        const categoriesIn = isPlainArray ? null : parsed.categories;
+        if (!Array.isArray(recipesIn) && !Array.isArray(brandsIn) && !Array.isArray(categoriesIn)) {
+          throw new Error('不正なフォーマット');
+        }
         const mergeById = (currentArr, importedArr) => {
           const map = new Map(currentArr.map(x => [x.id, x]));
           let added = 0, updated = 0, unchanged = 0;
@@ -4848,32 +4877,37 @@ function DataManagementView({
             unchanged
           };
         };
-        const current = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
-        const {
-          merged,
-          added,
-          updated,
-          unchanged
-        } = mergeById(current, imported);
-        localStorage.setItem('couleur_recipes', JSON.stringify(merged));
-        setLocalRecipes(merged);
-        if (onRecipesImported) onRecipesImported(merged);
-        let extraMsg = '';
-        if (!Array.isArray(parsed) && Array.isArray(parsed.brands)) {
+        const msgParts = [];
+        if (Array.isArray(recipesIn)) {
+          const current = JSON.parse(localStorage.getItem('couleur_recipes') || '[]');
+          const {
+            merged,
+            added,
+            updated,
+            unchanged
+          } = mergeById(current, recipesIn);
+          localStorage.setItem('couleur_recipes', JSON.stringify(merged));
+          setLocalRecipes(merged);
+          if (onRecipesImported) onRecipesImported(merged);
+          msgParts.push(`レシピ 追加${added}・上書き更新${updated}（変更なし${unchanged}）`);
+        }
+        if (Array.isArray(brandsIn)) {
           const currentBrands = JSON.parse(localStorage.getItem('couleur_brands') || 'null') || [];
-          const bResult = mergeById(currentBrands, parsed.brands);
+          const bResult = mergeById(currentBrands, brandsIn);
           localStorage.setItem('couleur_brands', JSON.stringify(bResult.merged));
+          localStorage.setItem('couleur_brands_version', String(DATA_SEED_VERSION));
           if (onBrandsImported) onBrandsImported(bResult.merged);
-          extraMsg += `／カラー剤マスタ 追加${bResult.added}・更新${bResult.updated}`;
+          msgParts.push(`カラー剤マスタ 追加${bResult.added}・更新${bResult.updated}`);
         }
-        if (!Array.isArray(parsed) && Array.isArray(parsed.categories)) {
+        if (Array.isArray(categoriesIn)) {
           const currentCats = JSON.parse(localStorage.getItem('couleur_categories') || 'null') || [];
-          const cResult = mergeById(currentCats, parsed.categories);
+          const cResult = mergeById(currentCats, categoriesIn);
           localStorage.setItem('couleur_categories', JSON.stringify(cResult.merged));
+          localStorage.setItem('couleur_categories_version', String(DATA_SEED_VERSION));
           if (onCategoriesImported) onCategoriesImported(cResult.merged);
-          extraMsg += `／色味グループ 追加${cResult.added}・更新${cResult.updated}`;
+          msgParts.push(`色味グループ 追加${cResult.added}・更新${cResult.updated}`);
         }
-        setImportMsg(`✅ レシピ 追加${added}・上書き更新${updated}（変更なし${unchanged}）` + extraMsg);
+        setImportMsg('✅ ' + msgParts.join('／'));
         setTimeout(() => setImportMsg(null), 6000);
       } catch(err) {
         setImportMsg('❌ ファイルの読み込みに失敗しました');
@@ -4886,6 +4920,7 @@ function DataManagementView({
 
   const card = {background:'#fff', border:'1px solid rgba(201,168,76,0.3)', borderRadius:14, padding:'20px 18px', marginBottom:16};
   const btn = {display:'block', width:'100%', padding:'13px', borderRadius:10, border:'1px solid rgba(138,101,32,0.5)', background:'#8a6520', color:'#fff', fontFamily:"var(--font-jp)", fontSize:14, fontWeight:500, cursor:'pointer', textAlign:'center'};
+  const btn2 = {display:'block', width:'100%', padding:'11px', borderRadius:10, border:'1px solid rgba(138,101,32,0.35)', background:'#fff', color:'#7a5818', fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, cursor:'pointer', textAlign:'center'};
   const desc = {fontSize:11, color:'#9a8060', lineHeight:1.7, marginTop:8, fontFamily:"var(--font-jp)"};
   const msgOk = {marginTop:10, padding:'8px 12px', borderRadius:8, background:'#f0faf0', color:'#2a7a2a', fontSize:12};
   const msgNg = {marginTop:10, padding:'8px 12px', borderRadius:8, background:'#fff0f0', color:'#c02020', fontSize:12};
@@ -4896,7 +4931,14 @@ function DataManagementView({
       /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📤 エクスポート"),
       /*#__PURE__*/React.createElement("button", {style:btn, onClick:handleExport}, "バックアップファイルを作成"),
       /*#__PURE__*/React.createElement("p", {style:desc}, "現在保存されているレシピ（", recipes.length, "件）とカラー剤マスタ（メーカー・色番号・色名・イメージ色）、色味グループ（「色味で探す」の分類）をまとめてJSONファイルとして書き出します。機種変更や端末間の共有にご利用ください。"),
-      exportMsg && /*#__PURE__*/React.createElement("div", {style: exportMsg.startsWith('✅') ? msgOk : msgNg}, exportMsg)
+      exportMsg && /*#__PURE__*/React.createElement("div", {style: exportMsg.startsWith('✅') || exportMsg.startsWith('📋') ? msgOk : msgNg}, exportMsg),
+      /*#__PURE__*/React.createElement("div", {style:{marginTop:16, paddingTop:16, borderTop:'1px solid rgba(201,168,76,0.2)'}},
+        /*#__PURE__*/React.createElement("button", {style:{...btn2, marginBottom:8}, onClick:handleExportBrands}, "カラー剤マスタのみバックアップ"),
+        brandsExportMsg && /*#__PURE__*/React.createElement("div", {style: brandsExportMsg.startsWith('✅') || brandsExportMsg.startsWith('📋') ? msgOk : msgNg}, brandsExportMsg),
+        /*#__PURE__*/React.createElement("button", {style:btn2, onClick:handleExportCategories}, "色味グループのみバックアップ"),
+        categoriesExportMsg && /*#__PURE__*/React.createElement("div", {style: categoriesExportMsg.startsWith('✅') || categoriesExportMsg.startsWith('📋') ? msgOk : msgNg}, categoriesExportMsg),
+        /*#__PURE__*/React.createElement("p", {style:desc}, "カラー剤マスタ編集・色味グループ編集の内容だけを、それぞれ個別のJSONファイルとして書き出します。編集前の状態を残しておきたいときにご利用ください。")
+      )
     ),
     /*#__PURE__*/React.createElement("div", {style:card},
       /*#__PURE__*/React.createElement("div", {style:{fontFamily:"var(--font-jp)", fontSize:13, fontWeight:500, color:'#5a3e10', marginBottom:12}}, "📥 インポート"),
